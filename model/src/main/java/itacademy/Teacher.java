@@ -2,14 +2,14 @@ package itacademy;
 
 import java.util.List;
 
-public class Employee {
+public class Teacher {
     private String name;
     private List<Double> salary;
 
-    public Employee() {
+    public Teacher() {
     }
 
-    public Employee(String name, List<Double> list) {
+    public Teacher(String name, List<Double> list) {
         this.name = name;
         this.salary = list;
     }
