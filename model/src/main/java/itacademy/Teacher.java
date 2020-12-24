@@ -29,4 +29,12 @@ public class Teacher {
     public void setSalary(List<Double> salary) {
         this.salary = salary;
     }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "name='" + name + '\'' +
+                ", salary=" + salary +
+                '}';
+    }
 }

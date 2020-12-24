@@ -1,5 +1,8 @@
 package itacademy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddTeacher extends HttpServlet {
+    private final static Logger log = LoggerFactory.getLogger(AddTeacher.class);
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Teacher teacher = new Teacher();
@@ -20,7 +25,7 @@ public class AddTeacher extends HttpServlet {
         teacher.setSalary(list);
         List<Teacher> teachers = TeachersRepository.getTeachers();
         teachers.add(teacher);
-
+        log.info("Admin added new teacher = {}", teacher);
         resp.sendRedirect("/admin/formteachers");
     }
 }
