@@ -14,21 +14,27 @@ public class Teachers extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
-        writer.write("<p>" + print() + "</p>");
+        writer.write(print());
         writer.close();
     }
 
     private static String print() {
         StringBuilder result = new StringBuilder();
-        for(Teacher teacher : teachers) {
-            result.append(teacher.getName()).append("<br>");
-            List<Double> list = teacher.getSalary();
-            for (int i = 0; i < list.size(); i++) {
-                result.append("Месяц: ").append(i+1);
-                result.append(" Зарплата: ").append(list.get(i)).append(" ");
-            }
-            result.append("<br><br>");
+        result.append("<table><tr><td><b>Зарплаты</b></td>");
+        for(int i = 1; i <= 8; i++) {
+            result.append("<td>Месяц: ").append(i).append("</td>");
         }
+        result.append("</tr>");
+        for(Teacher teacher : teachers) {
+            result.append("<tr>");
+            result.append("<td>").append(teacher.getName()).append("</td>");
+            List<Double> list = teacher.getSalary();
+            for (int i = 1; i <= list.size(); i++) {
+                result.append("<td>").append(list.get(i - 1)).append("</td>");
+            }
+            result.append("</tr>");
+        }
+        result.append("</table>");
         return result.toString();
     }
 }
