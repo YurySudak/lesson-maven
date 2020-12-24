@@ -3,6 +3,7 @@
  <head>
    <title>Средние зарплаты преподавателей</title>
    <meta charset="utf-8">
+   <style> table {border-spacing: 20px 10px; } </style>
 </head>
 <body>
 <jsp:include page="/menu.jsp" />

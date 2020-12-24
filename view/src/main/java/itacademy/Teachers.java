@@ -20,7 +20,7 @@ public class Teachers extends HttpServlet {
 
     private static String print() {
         StringBuilder result = new StringBuilder();
-        result.append("<table><tr><td><b>Зарплаты</b></td>");
+        result.append("<table border-spacing: 25px 20px; align=center><tr><td><b>Зарплаты</b></td>");
         for(int i = 1; i <= 8; i++) {
             result.append("<td>Месяц: ").append(i).append("</td>");
         }

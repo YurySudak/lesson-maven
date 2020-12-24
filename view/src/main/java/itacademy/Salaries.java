@@ -15,23 +15,32 @@ public class Salaries extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
-        writer.write("<p>" + print() + "</p>");
+        writer.write(printTable());
         writer.close();
     }
 
-    private static String print() {
+    private static String printTable() {
         StringBuilder result = new StringBuilder();
-        int[] arr = {1, 5, 6, 8};
-        for(int x : arr) {
-            result.append(printAll(x)).append("<br>");
+        result.append("<table align=center><tr><td><b>ФИО</b></td>");
+        for(int i = 1; i <= 8; i++) {
+            String russian = "";
+            if (i > 1) russian = "a";
+            if (i > 4) russian = "ев";
+            result.append("<td>За ").append(i).append(" месяц").append(russian).append("</td>");
         }
+        result.append("</tr>");
+        for (Teacher teacher : teachers) {
+            result.append("<tr>").append(printSalaries(teacher)).append("/tr>");
+        }
+        result.append("</table>");
         return result.toString();
     }
 
-    private static StringBuilder printAll(int months) {
-        StringBuilder result = new StringBuilder("Средние зарплаты за " + months + " месяцев: <br>");
-        for (Teacher e : teachers) {
-            result.append("ФИО: ").append(e.getName()).append(". Средняя зарплата: ").append(CalcUtil.calcSalary(e, months)).append("<br>");
+    private static StringBuilder printSalaries(Teacher teacher) {
+        StringBuilder result = new StringBuilder("<td>");
+        result.append(teacher.getName()).append("</td>");
+        for(int i = 1; i <= 8; i++) {
+            result.append("<td>").append(CalcUtil.calcSalary(teacher, i)).append("</td>");
         }
         return result;
     }
