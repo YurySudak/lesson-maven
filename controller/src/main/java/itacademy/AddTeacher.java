@@ -20,7 +20,14 @@ public class AddTeacher extends HttpServlet {
         teacher.setName(req.getParameter("fio"));
         List<Double> list = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
-            list.add(Double.parseDouble(req.getParameter("z" + i)));
+            double salary = 0;
+            String parameter = req.getParameter("z" + i);
+            try {
+                salary = Double.parseDouble(parameter);
+            } catch (NumberFormatException numberFormatException) {
+                log.debug("Admin added wrong salary: {}", parameter);
+            }
+            list.add(salary);
         }
         teacher.setSalary(list);
         List<Teacher> teachers = TeachersRepository.getTeachers();
