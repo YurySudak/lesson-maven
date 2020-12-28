@@ -19,7 +19,7 @@ public class AddTeacher extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Teacher teacher = new Teacher();
-        teacher.setName(req.getParameter("fio"));
+        teacher.setFio(req.getParameter("fio"));
         List<Double> list = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
             double salary = 0;

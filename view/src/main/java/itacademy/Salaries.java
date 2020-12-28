@@ -17,6 +17,7 @@ public class Salaries extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
         writer.write(printTable());
+        writer.flush();
         writer.close();
     }
 
@@ -31,15 +32,15 @@ public class Salaries extends HttpServlet {
         }
         result.append("</tr>");
         for (Teacher teacher : teachers) {
-            result.append("<tr>").append(printSalaries(teacher)).append("/tr>");
+            result.append("<tr>").append(printSalaries(teacher)).append("</tr>");
         }
         result.append("</table>");
         return result.toString();
     }
 
     private static StringBuilder printSalaries(Teacher teacher) {
-        StringBuilder result = new StringBuilder("<td>");
-        result.append(teacher.getName()).append("</td>");
+        StringBuilder result = new StringBuilder();
+        result.append("<td>").append(teacher.getFio()).append("</td>");
         for(int i = 1; i <= 8; i++) {
             result.append("<td>").append(CalcUtil.calcSalary(teacher, i)).append("</td>");
         }

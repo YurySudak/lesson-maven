@@ -29,7 +29,7 @@ public class Teachers extends HttpServlet {
         result.append("</tr>");
         for(Teacher teacher : teachers) {
             result.append("<tr>");
-            result.append("<td>").append(teacher.getName()).append("</td>");
+            result.append("<td>").append(teacher.getFio()).append("</td>");
             List<Double> list = teacher.getSalary();
             for (int i = 1; i <= list.size(); i++) {
                 result.append("<td>").append(list.get(i - 1)).append("</td>");

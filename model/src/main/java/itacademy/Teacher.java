@@ -2,24 +2,15 @@ package itacademy;
 
 import java.util.List;
 
-public class Teacher {
-    private String name;
+public class Teacher extends User {
     private List<Double> salary;
 
     public Teacher() {
     }
 
-    public Teacher(String name, List<Double> list) {
-        this.name = name;
+    public Teacher(String fio, List<Double> list) {
+        this.fio = fio;
         this.salary = list;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<Double> getSalary() {
@@ -33,7 +24,7 @@ public class Teacher {
     @Override
     public String toString() {
         return "Teacher{" +
-                "name='" + name + '\'' +
+                "fio='" + fio + '\'' +
                 ", salary=" + salary +
                 '}';
     }
