@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
- <head>
+<head>
    <title>Ввести новых преподавателей</title>
    <meta charset="utf-8">
-   <style> form {margin-left: 30%; }
-   table {border-spacing: 20px 10px; } </style>
+   <style>
+       form {margin-left: 30%; }
+       table {border-spacing: 20px 10px; }
+   </style>
 </head>
 <body>
-<jsp:include page="/menu.jsp" />
+<jsp:include page="/admin/menu.jsp" />
 <h2 align=center>Ввести новых преподавателей</h2>
 <form action="/admin/addteacher" method="post">
     <p>ФИО <input type="text" name="fio" size="50" required value="Блинов Игорь Игоревич"></p>

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(value = {"/admin/*"})
+@WebFilter(value = {"/*"})
 public class AuthFilter implements Filter {
 
     @Override
@@ -22,9 +22,9 @@ public class AuthFilter implements Filter {
         boolean isCookie = false;
         if (cookies != null)
             for (Cookie cookie : cookies)
-                if (cookie.getName().equals("user") && cookie.getValue().equals("admin"))
+                if (cookie.getName().equals("user") && !cookie.getValue().equals("guest"))
                     isCookie = true;
-        if (isCookie)
+        if (response.isCommitted() || request.getRequestURI().contains("/auth") || request.getRequestURI().contains("/login") || isCookie)
             chain.doFilter(req, resp);
         else
             response.sendRedirect("/auth");

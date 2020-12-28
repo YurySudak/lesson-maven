@@ -1,10 +1,17 @@
 package itacademy;
 
-public class User {
+public abstract class User {
     protected String fio;
     protected int age;
     protected String login;
     protected String password;
+
+    public User(String fio, int age, String login, String password) {
+        this.fio = fio;
+        this.age = age;
+        this.login = login;
+        this.password = password;
+    }
 
     public String getFio() {
         return fio;

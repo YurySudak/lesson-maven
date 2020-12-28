@@ -6,7 +6,7 @@
    <style> table {border-spacing: 20px 10px; } </style>
 </head>
 <body>
-<jsp:include page="/menu.jsp" />
+<jsp:include page="/admin/menu.jsp" />
 <h2 align=center>Средние зарплаты преподавателей</h2>
 <jsp:include page="/admin/salaries" />
 </body>
