@@ -20,8 +20,8 @@ public class TeacherPage extends HttpServlet {
                 break;
             }
         }
-        writer.write("<h2>Кабинет тренера</h2>");
+        writer.write("<div align=center><h2>Кабинет тренера</h2>");
         writer.write("<p>ФИО: " + trainer.fio + "</p>");
-        writer.write("<p>Возраст: " + trainer.age + "</p>");
+        writer.write("<p>Возраст: " + trainer.age + "</p></div>");
     }
 }
