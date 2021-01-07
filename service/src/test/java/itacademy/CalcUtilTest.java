@@ -7,10 +7,10 @@ import java.util.List;
 
 public class CalcUtilTest {
 
-    public static final Teacher teacher1 = new Teacher("name", 30, "l", "p", List.of(400.0, 600.0));
-    public static final Teacher teacher2 = new Teacher("name", 30, "l", "p", List.of(400.0));
-    public static final Teacher teacher3 = new Teacher("name", 30, "l", "p", List.of(0.0));
-    public static final Teacher teacher4 = new Teacher("name", 30, "l", "p", List.of(400.0, 400.0, 600.00, 600.00));
+    public static final Teacher teacher1 = new Teacher(List.of(400.0, 600.0));
+    public static final Teacher teacher2 = new Teacher(List.of(400.0));
+    public static final Teacher teacher3 = new Teacher(List.of(0.0));
+    public static final Teacher teacher4 = new Teacher(List.of(400.0, 400.0, 600.00, 600.00));
 
     @Test
     public void test() {

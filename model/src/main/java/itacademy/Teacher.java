@@ -8,12 +8,17 @@ public class Teacher extends User {
 
     public Teacher() {
         super(null, -1, null, null);
-        this.salary = null;
     }
 
-    public Teacher(String fio, int age, String login, String password, List<Double> list) {
+    public Teacher(List<Double> list) {
+        super(null, -1, null, null);
+        this.salary = list;
+    }
+
+    public Teacher(String fio, int age, String login, String password, List<Double> list, Group group) {
         super(fio, age, login, password);
         this.salary = list;
+        this.group = group;
     }
 
     public List<Double> getSalary() {
