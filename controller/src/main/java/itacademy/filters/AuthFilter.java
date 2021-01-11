@@ -38,7 +38,7 @@ public class AuthFilter implements Filter {
                         chain.doFilter(req, resp);
                         return;
                     }
-        response.sendRedirect("/auth");
+        response.sendRedirect("auth");
     }
 
     @Override

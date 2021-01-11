@@ -9,9 +9,9 @@
    </style>
 </head>
 <body>
-<jsp:include page="/admin/menu.jsp" />
+<jsp:include page="menu.jsp" />
 <h2 align=center>Ввести новых преподавателей</h2>
-<form action="/admin/addteacher" method="post">
+<form action="addteacher" method="post">
     <p>ФИО <input type="text" name="fio" size="50" required value="Блинов Игорь Игоревич"></p>
     <p>Зарплата за 1 месяц <input type="text" name="z1" size="5" required value="1100"></p>
     <p>Зарплата за 2 месяц <input type="text" name="z2" size="5" required value="1200"></p>
@@ -23,6 +23,6 @@
     <p>Зарплата за 8 месяц <input type="text" name="z8" size="5" required value="1800"></p>
     <p><button type="submit">Ввести</button></p>
 </form>
-<jsp:include page="/admin/teachers" />
+<jsp:include page="teachers" />
 </body>
 </html>

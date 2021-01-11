@@ -13,6 +13,6 @@ public class Logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.addCookie(new Cookie("user", "guest"));
-        resp.sendRedirect("/auth");
+        resp.sendRedirect("auth");
     }
 }

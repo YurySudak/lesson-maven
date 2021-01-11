@@ -1,16 +1,26 @@
 package itacademy;
 
 public abstract class User {
+    protected int id;
     protected String fio;
     protected int age;
     protected String login;
     protected String password;
 
-    public User(String fio, int age, String login, String password) {
+    public User(int id, String fio, int age, String login, String password) {
+        this.id = id;
         this.fio = fio;
         this.age = age;
         this.login = login;
         this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFio() {

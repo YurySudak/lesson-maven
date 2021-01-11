@@ -32,9 +32,8 @@ public class AddTeacher extends HttpServlet {
             list.add(salary);
         }
         teacher.setSalary(list);
-        List<Teacher> teachers = TeachersRepository.getTeachers();
-        teachers.add(teacher);
+        TeachersRepository.add(teacher);
         log.info("Admin added new teacher = {}", teacher);
-        resp.sendRedirect("/admin/formteachers");
+        resp.sendRedirect("formteachers");
     }
 }
