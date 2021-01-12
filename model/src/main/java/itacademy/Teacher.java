@@ -4,16 +4,16 @@ import java.util.List;
 
 public class Teacher extends User {
     private List<Double> salary;
-    private int group;
+    private int groupId;
 
     public Teacher() {
         super(-1,null, -1, null, null);
         this.salary = null;
     }
 
-    public Teacher(int id, String fio, int age, String login, String password, int group) {
+    public Teacher(int id, String fio, int age, String login, String password, int groupId) {
         super(id, fio, age, login, password);
-        this.group = group;
+        this.groupId = groupId;
     }
 
     public List<Double> getSalary() {
@@ -32,11 +32,11 @@ public class Teacher extends User {
                 '}';
     }
 
-    public int getGroup() {
-        return group;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setGroup(int group) {
-        this.group = group;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 }

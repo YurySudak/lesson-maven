@@ -8,11 +8,19 @@ public class Marks {
     private int studentId;
     private List<Integer> marksOfTheme;
 
-    public Marks(int id, int groupId, int student, List<Integer> markOfTheme) {
+    public Marks(int id, int groupId, int studentId, List<Integer> markOfTheme) {
         this.id = id;
         this.groupId = groupId;
-        this.studentId = student;
+        this.studentId = studentId;
         this.marksOfTheme = markOfTheme;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getGroupId() {

@@ -118,11 +118,15 @@ public class UsersRepository {
         List<Student> list = new ArrayList<>();
         for (Student student : students) {
             for (int group : student.getGroups()) {
-                if (teacher.getGroup() == group) {
+                if (teacher.getGroupId() == group) {
                     list.add(student);
                 }
             }
         }
         return list;
+    }
+
+    public static List<Teacher> getTeachers() {
+        return new ArrayList<>(teachers);
     }
 }

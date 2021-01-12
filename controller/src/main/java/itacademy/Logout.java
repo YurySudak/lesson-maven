@@ -1,8 +1,10 @@
 package itacademy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,9 +12,14 @@ import java.io.IOException;
 
 @WebServlet(value = {"/logout"})
 public class Logout extends HttpServlet {
+    private final static Logger log = LoggerFactory.getLogger(AddTeacher.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.addCookie(new Cookie("user", "guest"));
+        String user = (String) req.getSession().getAttribute("user");
+        String login = (String) req.getSession().getAttribute("login");
+        log.info("{} {} logged out", user, login);
+        req.getSession().invalidate();
         resp.sendRedirect("auth");
     }
 }

@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(value = {"/admin/addteacher"})
+@WebServlet(value = {"/addteacher"})
 public class AddTeacher extends HttpServlet {
     private final static Logger log = LoggerFactory.getLogger(AddTeacher.class);
 
@@ -32,8 +32,8 @@ public class AddTeacher extends HttpServlet {
             list.add(salary);
         }
         teacher.setSalary(list);
-        TeachersRepository.add(teacher);
+        UsersRepository.add(teacher);
         log.info("Admin added new teacher = {}", teacher);
-        resp.sendRedirect("formteachers");
+        resp.sendRedirect("addteachers");
     }
 }
