@@ -18,7 +18,7 @@ public class AdminPage extends HttpServlet {
         if ("admin".equals(user)) {
             PrintWriter writer = resp.getWriter();
             writer.write("<head><title>Страница администратора</title>");
-            writer.write("<style>div {margin-left: 30%; }");
+            writer.write("<style>div {margin-left: 20%; }");
             writer.write("table {border-spacing: 20px 10px; }</style></head>");
             writer.write("<body><div>");
 

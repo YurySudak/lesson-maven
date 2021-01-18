@@ -3,7 +3,11 @@ package itacademy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +20,7 @@ public class UsersRepository {
     private static List<Student> students = new ArrayList<>();
     private static Map<String, Admin> adminsMap = new HashMap();
     private static Map<String, Teacher> teachersMap = new HashMap();
-    private static Map<Integer, Student> studentsMap = new HashMap();
+    private static Map<String, Student> studentsMap = new HashMap();
     private static boolean isInit = false;
     private final static Logger log = LoggerFactory.getLogger(UsersRepository.class);
 
@@ -47,7 +51,10 @@ public class UsersRepository {
                     int group1 = resultSet.getInt("group1_id");
                     int group2 = resultSet.getInt("group2_id");
                     int group3 = resultSet.getInt("group3_id");
-                    List<Integer> groups = List.of(group1, group2, group3);
+                    List<Integer> groups = new ArrayList<>();
+                    if (group1 != 0) groups.add(group1);
+                    if (group2 != 0) groups.add(group2);
+                    if (group3 != 0) groups.add(group3);
                     students.add(new Student(id, fio, age, login, pass, groups));
                 }
             }
@@ -68,7 +75,7 @@ public class UsersRepository {
             teachersMap.put(teacher.getLogin(), teacher);
         }
         for (Student student : students) {
-            studentsMap.put(student.getId(), student);
+            studentsMap.put(student.getLogin(), student);
         }
     }
 
@@ -107,14 +114,22 @@ public class UsersRepository {
     }
 
     public static Teacher getTeacherByLogin(String login) {
+        checkInit();
         return teachersMap.get(login);
     }
 
-    public static Student getStudentById(int studentId) {
-        return studentsMap.get(studentId);
+    public static Student getStudentByLogin(String login) {
+        checkInit();
+        return studentsMap.get(login);
     }
 
+/*    public static Student getStudentById(int studentId) {
+        checkInit();
+        return studentsMap.get(studentId);
+    }*/
+
     public static List<Student> getStudentsByTeacher(Teacher teacher) {
+        checkInit();
         List<Student> list = new ArrayList<>();
         for (Student student : students) {
             for (int group : student.getGroups()) {
@@ -126,7 +141,20 @@ public class UsersRepository {
         return list;
     }
 
+    public static List<Admin> getAdmins() {
+        checkInit();
+        return new ArrayList<>(admins);
+    }
+
     public static List<Teacher> getTeachers() {
+        checkInit();
         return new ArrayList<>(teachers);
     }
+
+    public static List<Student> getStudents() {
+        checkInit();
+        return new ArrayList<>(students);
+    }
+
+
 }

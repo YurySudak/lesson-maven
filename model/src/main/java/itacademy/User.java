@@ -1,6 +1,6 @@
 package itacademy;
 
-public abstract class User {
+public class User {
     protected int id;
     protected String fio;
     protected int age;

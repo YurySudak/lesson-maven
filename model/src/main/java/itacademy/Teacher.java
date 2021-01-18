@@ -7,7 +7,7 @@ public class Teacher extends User {
     private int groupId;
 
     public Teacher() {
-        super(-1,null, -1, null, null);
+        super(-1, null, -1, null, null);
         this.salary = null;
     }
 
