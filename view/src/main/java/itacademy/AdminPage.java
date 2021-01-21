@@ -39,7 +39,11 @@ public class AdminPage extends HttpServlet {
     private void addteachers(PrintWriter writer) {
         writer.write("<h2 align=center>Ввести новых преподавателей</h2>\n");
         writer.write("<form action=\"addteacher\" method=\"post\">\n");
-        writer.write("<p>ФИО <input type=\"text\" name=\"fio\" size=\"50\" required value=\"Блинов Игорь Игоревич\"></p>\n");
+        writer.write("<p>Логин <input type=\"text\" name=\"login\" size=\"10\" required value=\"lok\"></p>\n");
+        writer.write("<p>Пароль <input type=\"text\" name=\"pass\" size=\"10\" required value=\"lok\"></p>\n");
+        writer.write("<p>ФИО <input type=\"text\" name=\"fio\" size=\"40\" required value=\"Локтев Алексей Алексеевич\"></p>\n");
+        writer.write("<p>Возраст <input type=\"text\" name=\"age\" size=\"5\" required value=\"25\"></p>\n");
+        writer.write("<p>Группа <input type=\"text\" name=\"group\" size=\"40\" required value=\"React and Angular\"></p>\n");
         for (int i = 1; i <=8; i++) {
             writer.write("<p>Зарплата за " + i + " месяц <input type=\"text\" name=\"z");
             writer.write(i +"\" size=\"5\" required value=\"1500\"></p>\n");

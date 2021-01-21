@@ -33,7 +33,8 @@ public class UpdateMarks extends HttpServlet {
                 }
             }
         }
-        log.info("Teacher edited marks");
+        int updates = Db.updateMarks();
+        log.info("Teacher edited marks, {} marks updated", updates);
         resp.sendRedirect("teacher");
     }
 }

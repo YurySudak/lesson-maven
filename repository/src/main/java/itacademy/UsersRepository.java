@@ -3,35 +3,26 @@ package itacademy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class UsersRepository {
-    private static Map<Integer, String> groups = new HashMap<>();
-    private static List<Admin> admins = new ArrayList<>();
-    private static List<Teacher> teachers = new ArrayList<>();
-    private static List<Student> students = new ArrayList<>();
-    private static Map<String, Admin> adminsMap = new HashMap();
-    private static Map<String, Teacher> teachersMap = new HashMap();
-    private static Map<String, Student> studentsMap = new HashMap();
-    private static boolean isInit = false;
+    private static final List<Admin> admins = new ArrayList<>();
+    private static final List<Teacher> teachers = new ArrayList<>();
+    private static final List<Student> students = new ArrayList<>();
+    private static final Map<String, Admin> adminsMap = new HashMap<>();
+    private static final Map<String, Teacher> teachersMap = new HashMap<>();
+    private static final Map<String, Student> studentsMap = new HashMap<>();
+    private static final Map<String, User> usersMap = new HashMap<>();
     private final static Logger log = LoggerFactory.getLogger(UsersRepository.class);
 
     public static void init() {
+        ResultSet resultSet = Db.getUsers();
         try {
-            Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://localhost:5432/postgres";
-            Connection connection = DriverManager.getConnection(url, "postgres", "admin");
-            String sql = "select * from \"user\"";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String fio = resultSet.getString("fio");
@@ -39,97 +30,74 @@ public class UsersRepository {
                 String login = resultSet.getString("login");
                 String pass = resultSet.getString("password");
                 int type = resultSet.getInt("type");
+                User user = new User(id, fio, age, login, pass);
+                usersMap.put(login, user);
 
                 if (type == 1) {
-                    admins.add(new Admin(id, fio, age, login, pass));
+                    Admin admin = new Admin(id, fio, age, login, pass);
+                    admins.add(admin);
+                    adminsMap.put(login, admin);
                 }
                 if (type == 2) {
-                    int group = resultSet.getInt("group1_id");
-                    teachers.add(new Teacher(id, fio, age, login, pass, group));
+                    int group = Db.getGroupId(id);
+                    List<Double> salary = Db.getSalary(id);
+                    Teacher teacher = new Teacher(id, fio, age, login, pass, group, salary);
+                    teachers.add(teacher);
+                    teachersMap.put(login, teacher);
                 }
                 if (type == 3) {
-                    int group1 = resultSet.getInt("group1_id");
-                    int group2 = resultSet.getInt("group2_id");
-                    int group3 = resultSet.getInt("group3_id");
-                    List<Integer> groups = new ArrayList<>();
-                    if (group1 != 0) groups.add(group1);
-                    if (group2 != 0) groups.add(group2);
-                    if (group3 != 0) groups.add(group3);
-                    students.add(new Student(id, fio, age, login, pass, groups));
+                    List<Integer> groups = Db.getGroupIds(id);
+                    Student student = new Student(id, fio, age, login, pass, groups);
+                    students.add(student);
+                    studentsMap.put(login, student);
                 }
             }
-            connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             log.error(e.getMessage());
-        }
-
-        teachers.get(0).setSalary(List.of(1400.0, 1400.0, 1400.0, 1400.0, 1600.0, 1600.0, 1600.0, 1600.0));
-        teachers.get(1).setSalary(List.of(1500.0, 1500.0, 1500.0, 1500.0, 1600.0, 1600.0, 1600.0, 1600.0));
-        teachers.get(2).setSalary(List.of(1600.0, 1600.0, 1600.0, 1600.0, 1800.0, 1800.0, 1800.0, 1800.0));
-
-        for (Admin admin : admins) {
-            adminsMap.put(admin.getLogin(), admin);
-        }
-        for (Teacher teacher : teachers) {
-            teachersMap.put(teacher.getLogin(), teacher);
-        }
-        for (Student student : students) {
-            studentsMap.put(student.getLogin(), student);
         }
     }
 
     public static void add(User user) {
-        checkInit();
-        if (user instanceof Admin) admins.add((Admin) user);
-        if (user instanceof Teacher) teachers.add((Teacher) user);
-        if (user instanceof Student) students.add((Student) user);
+        if (user instanceof Admin) {
+            admins.add((Admin) user);
+        }
+        if (user instanceof Teacher) {
+            Teacher teacher = (Teacher) user;
+            int id = Db.addTeacher(teacher);
+            teacher.setId(id);
+            Db.setSalary(teacher);
+            Db.setTeacherGroupId(teacher);
+            teachers.add(teacher);
+            String login = teacher.getLogin();
+            teachersMap.put(login, teacher);
+            usersMap.put(login, teacher);
+        }
+        if (user instanceof Student) {
+            students.add((Student) user);
+        }
     }
 
     public static String getType(String login, String pass) {
-        checkInit();
-        for (User user : admins) {
-            if (login.equals(user.getLogin()) && pass.equals(user.getPassword())) {
-                return "admin";
-            }
-        }
-        for (User user : teachers) {
-            if (login.equals(user.getLogin()) && pass.equals(user.getPassword())) {
-                return "teacher";
-            }
-        }
-        for (User user : students) {
-            if (login.equals(user.getLogin()) && pass.equals(user.getPassword())) {
-                return "student";
-            }
+        User user = usersMap.get(login);
+        String password = user.getPassword();
+        if (pass.equals(password)) {
+            if (adminsMap.containsKey(login)) return "admin";
+            if (teachersMap.containsKey(login)) return "teacher";
+            if (studentsMap.containsKey(login)) return "student";
         }
         return null;
     }
 
-    private static void checkInit() {
-        if (!isInit) {
-            init();
-            isInit = true;
-        }
-    }
-
     public static Teacher getTeacherByLogin(String login) {
-        checkInit();
         return teachersMap.get(login);
     }
 
     public static Student getStudentByLogin(String login) {
-        checkInit();
         return studentsMap.get(login);
     }
 
-/*    public static Student getStudentById(int studentId) {
-        checkInit();
-        return studentsMap.get(studentId);
-    }*/
-
     public static List<Student> getStudentsByTeacher(Teacher teacher) {
-        checkInit();
         List<Student> list = new ArrayList<>();
         for (Student student : students) {
             for (int group : student.getGroups()) {
@@ -142,19 +110,15 @@ public class UsersRepository {
     }
 
     public static List<Admin> getAdmins() {
-        checkInit();
         return new ArrayList<>(admins);
     }
 
     public static List<Teacher> getTeachers() {
-        checkInit();
         return new ArrayList<>(teachers);
     }
 
     public static List<Student> getStudents() {
-        checkInit();
         return new ArrayList<>(students);
     }
-
 
 }

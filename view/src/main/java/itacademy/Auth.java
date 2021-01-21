@@ -13,6 +13,14 @@ import java.util.List;
 public class Auth  extends HttpServlet {
 
     @Override
+    public void init() throws ServletException {
+        super.init();
+        UsersRepository.init();
+        MarksRepository.init();
+        NamesRepository.init();
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String user = (String) req.getSession().getAttribute("user");
         if ("admin".equals(user)) {

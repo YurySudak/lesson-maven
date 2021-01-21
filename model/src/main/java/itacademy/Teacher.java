@@ -11,9 +11,10 @@ public class Teacher extends User {
         this.salary = null;
     }
 
-    public Teacher(int id, String fio, int age, String login, String password, int groupId) {
+    public Teacher(int id, String fio, int age, String login, String password, int groupId, List<Double> salary) {
         super(id, fio, age, login, password);
         this.groupId = groupId;
+        this.salary = salary;
     }
 
     public List<Double> getSalary() {

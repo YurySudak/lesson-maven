@@ -10,19 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 public class MarksRepository {
-    private static List<Marks> marks = new ArrayList<>();
-    private static boolean isInit = false;
+    private static final List<Marks> marks = new ArrayList<>();
+    private static final Map<Integer, Marks> marksMap = new HashMap<>();
     private final static Logger log = LoggerFactory.getLogger(UsersRepository.class);
-    private static Map<Integer, Marks> marksMap = new HashMap<>();
 
     public static void init() {
         try {
-            Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://localhost:5432/postgres";
-            Connection connection = DriverManager.getConnection(url, "postgres", "admin");
-            String sql = "select * from marks";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = Db.getMarks();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int groupId = resultSet.getInt("group_id");
@@ -36,18 +30,13 @@ public class MarksRepository {
                 marks.add(mark);
                 marksMap.put(id, mark);
             }
-            connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             log.error(e.getMessage());
         }
     }
 
     public static Marks getMarksByStudentAndGroup(Student student, int group) {
-        if (!isInit) {
-            init();
-            isInit = true;
-        }
         for (Marks m : marks) {
             if (m.getStudentId() == student.getId() && m.getGroupId() == group)
                 return m;
@@ -57,10 +46,6 @@ public class MarksRepository {
 
     public static List<Marks> getMarks() {
         return new ArrayList<>(marks);
-    }
-
-    public static void setMarks(List<Marks> marks) {
-        MarksRepository.marks = marks;
     }
 
     public static void setByThemeAndId(int markOfTheme, int id, int mark) {

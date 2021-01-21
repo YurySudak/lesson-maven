@@ -19,7 +19,20 @@ public class AddTeacher extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Teacher teacher = new Teacher();
+        teacher.setLogin(req.getParameter("login"));
+        teacher.setPassword(req.getParameter("pass"));
         teacher.setFio(req.getParameter("fio"));
+        String inputAge = req.getParameter("age");
+        int age = 0;
+        try {
+            age = Integer.parseInt(inputAge);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            log.debug("Admin set wrong age: {}", inputAge);
+        }
+        teacher.setAge(age);
+        String group = req.getParameter("group");
+        teacher.setGroupId(NamesRepository.getGroupIdByName(group));
         List<Double> list = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
             double salary = 0;
