@@ -11,32 +11,23 @@ import java.io.IOException;
 
 @WebServlet(value = {"/login"})
 public class Login extends HttpServlet {
-    private final static Logger log = LoggerFactory.getLogger(AddTeacher.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AddTeacher.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String login = req.getParameter("login");
         String pass = req.getParameter("pass");
-
-        if ("admin".equals(UsersRepository.getType(login, pass))) {
-            req.getSession().setAttribute("user", "admin");
+        User user = UsersRepository.getUserByLogin(login);
+        if (pass.equals(user.getPassword())) {
+            String sessionType = "";
+            int type = user.getType();
+            if (type == 1) sessionType = "admin";
+            if (type == 2) sessionType = "teacher";
+            if (type == 3) sessionType = "student";
+            req.getSession().setAttribute("user", sessionType);
             req.getSession().setAttribute("login", login);
-            log.info("Admin {} logged in", login);
-            resp.sendRedirect("admin");
-            return;
-        }
-        if ("teacher".equals(UsersRepository.getType(login, pass))) {
-            req.getSession().setAttribute("user", "teacher");
-            req.getSession().setAttribute("login", login);
-            log.info("Teacher {} logged in", login);
-            resp.sendRedirect("teacher");
-            return;
-        }
-        if ("student".equals(UsersRepository.getType(login, pass))) {
-            req.getSession().setAttribute("user", "student");
-            req.getSession().setAttribute("login", login);
-            log.info("Student {} logged in", login);
-            resp.sendRedirect("student");
+            LOG.info(sessionType +" {} logged in", login);
+            resp.sendRedirect(sessionType);
             return;
         }
         resp.sendRedirect("auth");

@@ -31,13 +31,9 @@ public class StudentPage extends HttpServlet {
             writer.write("</tr>");
             for (Integer groupId : student.getGroups()) {
                 writer.write("<tr><td>Группа: " + NamesRepository.getGroupNameById(groupId) + "</td>");
-                Marks marks = MarksRepository.getMarksByStudentAndGroup(student, groupId);
-                for (int i = 0; i < 12; i++) {
-                    int mark = -1;
-                    if (marks.getMarksOfTheme() != null) {
-                        mark = marks.getMarksOfTheme().get(i);
-                    }
-                    writer.write("<td>" + mark + "</td>");
+                for (int theme = 1; theme <= MarksRepository.amountOfThemes; theme++) {
+                    Mark mark = MarksRepository.getMark(student.getId(), groupId, theme);
+                    writer.write("<td>" + mark.getValue() + "</td>");
                 }
                 writer.write("</tr>");
             }

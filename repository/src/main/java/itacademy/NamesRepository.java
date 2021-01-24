@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NamesRepository {
-    private final static Logger log = LoggerFactory.getLogger(UsersRepository.class);
+    private final static Logger LOG = LoggerFactory.getLogger(UsersRepository.class);
     private static final Map<Integer, String> groupNames = new HashMap<>();
     private static final Map<String, Integer> groupIds = new HashMap<>();
 
@@ -24,7 +24,7 @@ public class NamesRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 
@@ -37,10 +37,15 @@ public class NamesRepository {
         if (id != null) {
             return id;
         } else {
-            id = Db.setGroup(name);
+            id = Db.addGroup(name);
             groupIds.put(name, id);
             groupNames.put(id, name);
         }
         return id;
+    }
+
+    public static void setGroup(int groupId, String groupName) {
+        groupNames.put(groupId, groupName);
+        groupIds.put(groupName, groupId);
     }
 }

@@ -1,18 +1,18 @@
 package itacademy;
 
-import java.util.List;
-
-public class Marks {
+public class Mark {
     private int id;
     private int groupId;
     private int studentId;
-    private List<Integer> marksOfTheme;
+    private int theme;
+    private int value;
 
-    public Marks(int id, int groupId, int studentId, List<Integer> markOfTheme) {
+    public Mark(int id, int groupId, int studentId, int theme, int value) {
         this.id = id;
         this.groupId = groupId;
         this.studentId = studentId;
-        this.marksOfTheme = markOfTheme;
+        this.theme = theme;
+        this.value = value;
     }
 
     public int getId() {
@@ -39,11 +39,19 @@ public class Marks {
         this.studentId = studentId;
     }
 
-    public List<Integer> getMarksOfTheme() {
-        return marksOfTheme;
+    public int getTheme() {
+        return theme;
     }
 
-    public void setMarksOfTheme(List<Integer> marksOfTheme) {
-        this.marksOfTheme = marksOfTheme;
+    public void setTheme(int theme) {
+        this.theme = theme;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 }

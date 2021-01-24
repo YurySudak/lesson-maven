@@ -12,13 +12,13 @@ import java.io.IOException;
 
 @WebServlet(value = {"/logout"})
 public class Logout extends HttpServlet {
-    private final static Logger log = LoggerFactory.getLogger(AddTeacher.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AddTeacher.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String user = (String) req.getSession().getAttribute("user");
         String login = (String) req.getSession().getAttribute("login");
-        log.info("{} {} logged out", user, login);
+        LOG.info("{} {} logged out", user, login);
         req.getSession().invalidate();
         resp.sendRedirect("auth");
     }

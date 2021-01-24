@@ -6,7 +6,7 @@ public class Student extends User {
     private List<Integer> groups;
 
     public Student(int id, String fio, int age, String login, String password, List<Integer> groups) {
-        super(id, fio, age, login, password);
+        super(id, 3, fio, age, login, password);
         this.groups = groups;
     }
 

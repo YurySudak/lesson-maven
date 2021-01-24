@@ -7,12 +7,12 @@ public class Teacher extends User {
     private int groupId;
 
     public Teacher() {
-        super(-1, null, -1, null, null);
+        super(-1, 2, null, -1, null, null);
         this.salary = null;
     }
 
     public Teacher(int id, String fio, int age, String login, String password, int groupId, List<Double> salary) {
-        super(id, fio, age, login, password);
+        super(id, 2, fio, age, login, password);
         this.groupId = groupId;
         this.salary = salary;
     }

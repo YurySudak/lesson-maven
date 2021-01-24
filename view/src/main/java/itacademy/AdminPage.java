@@ -11,6 +11,7 @@ import java.util.List;
 
 @WebServlet(value = {"/admin", "/addteachers"})
 public class AdminPage extends HttpServlet {
+    private final static int AMOUNT_OF_MONTHS = 12;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -18,7 +19,7 @@ public class AdminPage extends HttpServlet {
         if ("admin".equals(user)) {
             PrintWriter writer = resp.getWriter();
             writer.write("<head><title>Страница администратора</title>");
-            writer.write("<style>div {margin-left: 20%; }");
+            writer.write("<style>div {margin-left: 10%; }");
             writer.write("table {border-spacing: 20px 10px; }</style></head>");
             writer.write("<body><div>");
 
@@ -43,8 +44,8 @@ public class AdminPage extends HttpServlet {
         writer.write("<p>Пароль <input type=\"text\" name=\"pass\" size=\"10\" required value=\"lok\"></p>\n");
         writer.write("<p>ФИО <input type=\"text\" name=\"fio\" size=\"40\" required value=\"Локтев Алексей Алексеевич\"></p>\n");
         writer.write("<p>Возраст <input type=\"text\" name=\"age\" size=\"5\" required value=\"25\"></p>\n");
-        writer.write("<p>Группа <input type=\"text\" name=\"group\" size=\"40\" required value=\"React and Angular\"></p>\n");
-        for (int i = 1; i <=8; i++) {
+        writer.write("<p>Группа <input type=\"text\" name=\"group_name\" size=\"40\" required value=\"React and Angular\"></p>\n");
+        for (int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
             writer.write("<p>Зарплата за " + i + " месяц <input type=\"text\" name=\"z");
             writer.write(i +"\" size=\"5\" required value=\"1500\"></p>\n");
         }
@@ -55,7 +56,7 @@ public class AdminPage extends HttpServlet {
     private void teachers(PrintWriter writer) {
         StringBuilder result = new StringBuilder();
         result.append("<table border-spacing: 25px 20px; align=center><tr><td><b>Зарплаты</b></td>");
-        for(int i = 1; i <= 8; i++) {
+        for(int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
             result.append("<td>Месяц: ").append(i).append("</td>");
         }
         result.append("</tr>");
@@ -87,7 +88,7 @@ public class AdminPage extends HttpServlet {
         writer.write("<h2 align=center>Средние зарплаты преподавателей</h2>");
         StringBuilder result = new StringBuilder();
         result.append("<table align=center><tr><td><b>ФИО</b></td>");
-        for(int i = 1; i <= 8; i++) {
+        for(int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
             String russian = "";
             if (i > 1) russian = "a";
             if (i > 4) russian = "ев";
@@ -106,7 +107,7 @@ public class AdminPage extends HttpServlet {
     private static StringBuilder printSalaries(Teacher teacher) {
         StringBuilder result = new StringBuilder();
         result.append("<td>").append(teacher.getFio()).append("</td>");
-        for(int i = 1; i <= 8; i++) {
+        for(int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
             result.append("<td>").append(CalcUtil.calcSalary(teacher, i)).append("</td>");
         }
         return result;

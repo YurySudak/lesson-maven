@@ -18,7 +18,7 @@ public class UsersRepository {
     private static final Map<String, Teacher> teachersMap = new HashMap<>();
     private static final Map<String, Student> studentsMap = new HashMap<>();
     private static final Map<String, User> usersMap = new HashMap<>();
-    private final static Logger log = LoggerFactory.getLogger(UsersRepository.class);
+    private final static Logger LOG = LoggerFactory.getLogger(UsersRepository.class);
 
     public static void init() {
         ResultSet resultSet = Db.getUsers();
@@ -30,7 +30,7 @@ public class UsersRepository {
                 String login = resultSet.getString("login");
                 String pass = resultSet.getString("password");
                 int type = resultSet.getInt("type");
-                User user = new User(id, fio, age, login, pass);
+                User user = new User(id, type, fio, age, login, pass);
                 usersMap.put(login, user);
 
                 if (type == 1) {
@@ -54,20 +54,21 @@ public class UsersRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 
-    public static void add(User user) {
+    public static void addUser(User user) {
         if (user instanceof Admin) {
             admins.add((Admin) user);
+            //TODO
         }
         if (user instanceof Teacher) {
             Teacher teacher = (Teacher) user;
-            int id = Db.addTeacher(teacher);
+            int id = Db.addUser(teacher);
             teacher.setId(id);
+            Db.linkUserGroup(teacher.getId(), teacher.getGroupId());
             Db.setSalary(teacher);
-            Db.setTeacherGroupId(teacher);
             teachers.add(teacher);
             String login = teacher.getLogin();
             teachersMap.put(login, teacher);
@@ -75,18 +76,12 @@ public class UsersRepository {
         }
         if (user instanceof Student) {
             students.add((Student) user);
+            //TODO
         }
     }
 
-    public static String getType(String login, String pass) {
-        User user = usersMap.get(login);
-        String password = user.getPassword();
-        if (pass.equals(password)) {
-            if (adminsMap.containsKey(login)) return "admin";
-            if (teachersMap.containsKey(login)) return "teacher";
-            if (studentsMap.containsKey(login)) return "student";
-        }
-        return null;
+    public static User getUserByLogin(String login) {
+        return usersMap.get(login);
     }
 
     public static Teacher getTeacherByLogin(String login) {
@@ -120,5 +115,4 @@ public class UsersRepository {
     public static List<Student> getStudents() {
         return new ArrayList<>(students);
     }
-
 }

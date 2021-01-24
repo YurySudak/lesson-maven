@@ -31,7 +31,6 @@ public class TeacherPage extends HttpServlet {
             }
             writer.write("</tr>");
 
-
             if ("/teacher".equals(req.getServletPath())) {
                 show(teacher, writer, students);
             }
@@ -39,8 +38,6 @@ public class TeacherPage extends HttpServlet {
             if ("/edit".equals(req.getServletPath())) {
                 edit(teacher, writer, students);
             }
-
-
 
             writer.write("</div></body>");
             writer.flush();
@@ -50,16 +47,11 @@ public class TeacherPage extends HttpServlet {
 
     private void edit(Teacher teacher, PrintWriter writer, List<Student> students) {
         for (Student student : students) {
-            Marks marks = MarksRepository.getMarksByStudentAndGroup(student, teacher.getGroupId());
             writer.write("<form action=\"updateMarks\" method=\"post\" align=center>");
             writer.write("<tr><td>Студент: " + student.getFio() + "</td>");
-            for (int i = 0; i < 12; i++) {
-                int mark = -1;
-                if (marks.getMarksOfTheme() != null) {
-                    mark = marks.getMarksOfTheme().get(i);
-                }
-                int num = i + 1;
-                String str = "<input type=\"text\" name=\"mark_of_theme_" + num + "_of_mark_id_" + marks.getId() + "\" size=\"2\" value=\"" + mark + "\">";
+            for (int theme = 1; theme <= MarksRepository.amountOfThemes; theme++) {
+                Mark mark = MarksRepository.getMark(student.getId(), teacher.getGroupId(), theme);
+                String str = "<input type=\"text\" name=\"mark_id_" + mark.getId() + "\" size=\"2\" value=\"" + mark.getValue() + "\">";
                 writer.write("<td>" + str + "</td>");
             }
             writer.write("</tr>");
@@ -68,19 +60,19 @@ public class TeacherPage extends HttpServlet {
     }
 
     private void show(Teacher teacher, PrintWriter writer, List<Student> students) {
-        for (Student student : students) {
-            Marks marks = MarksRepository.getMarksByStudentAndGroup(student, teacher.getGroupId());
-            writer.write("<tr><td>Студент: " + student.getFio() + "</td>");
-            for (int i = 0; i < 12; i++) {
-                int mark = -1;
-                if (marks.getMarksOfTheme() != null) {
-                    mark = marks.getMarksOfTheme().get(i);
+        if (students.size() == 0) {
+            writer.write("<tr><td>У вас пока нет студентов</td></tr></table><p>");
+        } else {
+            for (Student student : students) {
+                writer.write("<tr><td>Студент: " + student.getFio() + "</td>");
+                for (int theme = 1; theme <= MarksRepository.amountOfThemes; theme++) {
+                    Mark mark = MarksRepository.getMark(student.getId(), teacher.getGroupId(), theme);
+                    writer.write("<td>" + mark.getValue() + "</td>");
                 }
-                writer.write("<td>" + mark + "</td>");
+                writer.write("</tr>");
             }
-            writer.write("</tr>");
+            writer.write("</table><p><a href=\"edit\">Редактировать</a> | ");
         }
-        writer.write("</table><p><a href=\"edit\">Редактировать</a> | ");
         writer.write("<a href=\"logout\">Выйти</a></p>");
     }
 }
