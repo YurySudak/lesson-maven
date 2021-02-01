@@ -6,18 +6,19 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UsersRepository {
-    private static final List<Admin> admins = new ArrayList<>();
-    private static final List<Teacher> teachers = new ArrayList<>();
-    private static final List<Student> students = new ArrayList<>();
-    private static final Map<String, Admin> adminsMap = new HashMap<>();
-    private static final Map<String, Teacher> teachersMap = new HashMap<>();
-    private static final Map<String, Student> studentsMap = new HashMap<>();
-    private static final Map<String, User> usersMap = new HashMap<>();
+    private static final List<Admin> admins = Collections.synchronizedList(new ArrayList<>());
+    private static final List<Teacher> teachers = Collections.synchronizedList(new ArrayList<>());
+    private static final List<Student> students = Collections.synchronizedList(new ArrayList<>());
+    private static final Map<String, Admin> adminsMap = new ConcurrentHashMap<>();
+    private static final Map<String, Teacher> teachersMap = new ConcurrentHashMap<>();
+    private static final Map<String, Student> studentsMap = new ConcurrentHashMap<>();
+    private static final Map<String, User> usersMap = new ConcurrentHashMap<>();
     private final static Logger LOG = LoggerFactory.getLogger(UsersRepository.class);
 
     public static void init() {
@@ -54,6 +55,11 @@ public class UsersRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            LOG.error(e.getMessage());
+        }
+        try {
+            resultSet.close();
+        } catch (SQLException e) {
             LOG.error(e.getMessage());
         }
     }

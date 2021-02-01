@@ -11,30 +11,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(value = {"/addteacher"})
+@WebServlet(value = {"/" + ServletPath.ADD_TEACHER})
 public class AddTeacher extends HttpServlet {
-    private final static Logger LOG = LoggerFactory.getLogger(AddTeacher.class);
-    private final static int AMOUNT_OF_MONTHS = 12;
+    private static final Logger LOG = LoggerFactory.getLogger(AddTeacher.class);
+    private static final int AMOUNT_OF_MONTHS = 12;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Teacher teacher = new Teacher();
-        teacher.setLogin(req.getParameter("login"));
-        teacher.setPassword(req.getParameter("pass"));
-        teacher.setFio(req.getParameter("fio"));
-        String inputAge = req.getParameter("age");
-        int age = 0;
-        try {
-            age = Integer.parseInt(inputAge);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            LOG.debug("Admin set wrong age: {}", inputAge);
-        }
-        teacher.setAge(age);
-        String groupName = req.getParameter("group_name");
-        int groupId =  Db.addGroup(groupName);
-        teacher.setGroupId(groupId);
-        NamesRepository.setGroup(groupId, groupName);
+        teacher.setLogin(req.getParameter(Const.LOGIN));
+        teacher.setPassword(req.getParameter(Const.PASS));
+        teacher.setFio(req.getParameter(Const.FIO));
+        setAge(req, teacher);
+        setGroupId(req, teacher);
+        setSalary(req, teacher);
+        RepositoryService.addUser(teacher);
+        LOG.info("Admin added new teacher = {}", teacher);
+        resp.sendRedirect(ServletPath.ADD_TEACHERS);
+    }
+
+    private void setSalary(HttpServletRequest req, Teacher teacher) {
         List<Double> list = new ArrayList<>();
         for (int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
             double salary = 0;
@@ -47,8 +43,24 @@ public class AddTeacher extends HttpServlet {
             list.add(salary);
         }
         teacher.setSalary(list);
-        UsersRepository.addUser(teacher);
-        LOG.info("Admin added new teacher = {}", teacher);
-        resp.sendRedirect("addteachers");
+    }
+
+    private void setGroupId(HttpServletRequest req, Teacher teacher) {
+        String groupName = req.getParameter("group_name");
+        int groupId =  RepositoryService.addGroup(groupName);
+        teacher.setGroupId(groupId);
+        RepositoryService.setGroup(groupId, groupName);
+    }
+
+    private void setAge(HttpServletRequest req, Teacher teacher) {
+        String inputAge = req.getParameter(Const.AGE);
+        int age = 0;
+        try {
+            age = Integer.parseInt(inputAge);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            LOG.debug("Admin set wrong age: {}", inputAge);
+        }
+        teacher.setAge(age);
     }
 }

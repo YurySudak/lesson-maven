@@ -6,14 +6,15 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MarksRepository {
-    private static final List<Mark> marks = new ArrayList<>();
-    private static final Map<Integer, Mark> marksMap = new HashMap<>();
-    private final static Logger LOG = LoggerFactory.getLogger(UsersRepository.class);
+    private static final List<Mark> marks = Collections.synchronizedList(new ArrayList<>());
+    private static final Map<Integer, Mark> marksMap = new ConcurrentHashMap<>();
+    private final static Logger LOG = LoggerFactory.getLogger(MarksRepository.class);
     public final static int amountOfThemes = 12;
 
     public static void init() {
@@ -30,7 +31,6 @@ public class MarksRepository {
                 marksMap.put(id, mark);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             LOG.error(e.getMessage());
         }
     }

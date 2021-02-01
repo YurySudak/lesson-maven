@@ -13,12 +13,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Db {
-    private final static Logger LOG = LoggerFactory.getLogger(UsersRepository.class);
+    private final static Logger LOG = LoggerFactory.getLogger(Db.class);
     private final static String URL = "jdbc:postgresql://localhost:5432/postgres";
     private final static String DRIVER = "org.postgresql.Driver";
     private static final String USER = "postgres";
     private static final String PASS = "admin";
     private final static String GET_GROUP_IDS = "select group_id from user_group where user_id = ";
+
+    static {
+        try {
+            Class.forName(DRIVER);
+        } catch (ClassNotFoundException e) {
+            LOG.error(e.getMessage());
+        }
+    }
 
     public static ResultSet getGroups() {
         String sql = "select * from \"group\"";
@@ -57,25 +65,36 @@ public class Db {
 
     private static ResultSet getQuery(String sql) {
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
-            Class.forName(DRIVER);
-            Connection connection = DriverManager.getConnection(URL, USER, PASS);
+            connection = getConnection();
+            connection.setAutoCommit(false);
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
+            connection.commit();
             statement.close();
             connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
         }
         return resultSet;
     }
 
+    private static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASS);
+    }
+
     public static int addUser(User user) {
         int id = 0;
+        Connection connection = null;
         try {
-            Class.forName(DRIVER);
-            Connection connection = DriverManager.getConnection(URL, USER, PASS);
+            connection = getConnection();
+            connection.setAutoCommit(false);
             String sql = "insert into \"user\" (\"type\", fio, age, login, \"password\") " +
                     "values (?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -85,14 +104,20 @@ public class Db {
                 preparedStatement.setString(4, user.getLogin());
                 preparedStatement.setString(5, user.getPassword());
                 preparedStatement.executeUpdate();
+                connection.commit();
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     id = resultSet.getInt(1);
                 }
+                resultSet.close();
             }
             connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
         }
         return id;
@@ -101,22 +126,28 @@ public class Db {
     public static int setSalary(Teacher teacher) {
         List<Double> salary = teacher.getSalary();
         int result = 0;
+        Connection connection = null;
         try {
-            Class.forName(DRIVER);
-            Connection connection = DriverManager.getConnection(URL, USER, PASS);
+            connection = getConnection();
+            connection.setAutoCommit(false);
             int i = 1;
-            for (double value : salary) {
-                String sql = "insert into salary (teacher_id, month, value) values (?, ?, ?)";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            String sql = "insert into salary (teacher_id, month, value) values (?, ?, ?)";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                for (double value : salary) {
                     preparedStatement.setInt(1, teacher.getId());
                     preparedStatement.setInt(2, i++);
                     preparedStatement.setDouble(3, value);
                     result = preparedStatement.executeUpdate();
+                    connection.commit();
                 }
             }
             connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
         }
         return result;
@@ -124,15 +155,17 @@ public class Db {
 
     public static List<Double> getSalary(int teacherId) {
         List<Double> salary = new ArrayList<>();
+        Connection connection = null;
         try {
-            Class.forName(DRIVER);
-            Connection connection = DriverManager.getConnection(URL, USER, PASS);
-            for (int i = 1; i <= 12; i++) {
-                String sql = "select * from salary where teacher_id = ? and month = ?";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            connection = getConnection();
+            connection.setAutoCommit(false);
+            String sql = "select * from salary where teacher_id = ? and month = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                for (int i = 1; i <= 12; i++) {
                     preparedStatement.setInt(1, teacherId);
                     preparedStatement.setInt(2, i);
                     ResultSet resultSet = preparedStatement.executeQuery();
+                    connection.commit();
                     double value = 0;
                     if (resultSet.next()) {
                         value = resultSet.getDouble("value");
@@ -141,8 +174,12 @@ public class Db {
                 }
             }
             connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
         }
         return salary;
@@ -151,23 +188,29 @@ public class Db {
     public static int updateMarks() {
         List<Mark> marks = MarksRepository.getMarks();
         int result = 0;
+        Connection connection = null;
         try {
-            Class.forName(DRIVER);
-            Connection connection = DriverManager.getConnection(URL, USER, PASS);
+            connection = getConnection();
+            connection.setAutoCommit(false);
             String sql = "update mark set value = ?, group_id = ?, student_id = ?, theme = ? where id = ?";
-            for (Mark mark : marks) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                for (Mark mark : marks) {
                     preparedStatement.setInt(1, mark.getValue());
                     preparedStatement.setInt(2, mark.getGroupId());
                     preparedStatement.setInt(3, mark.getStudentId());
                     preparedStatement.setInt(4, mark.getTheme());
                     preparedStatement.setInt(5, mark.getId());
                     result = preparedStatement.executeUpdate();
+                    connection.commit();
                 }
             }
             connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
         }
         return result;
@@ -175,21 +218,28 @@ public class Db {
 
     public static int addGroup(String groupName) {
         int id = 0;
+        Connection connection = null;
         try {
-            Class.forName(DRIVER);
-            Connection connection = DriverManager.getConnection(URL, USER, PASS);
+            connection = getConnection();
+            connection.setAutoCommit(false);
             String sql = "insert into \"group\" (group_name) values (?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, groupName);
                 preparedStatement.executeUpdate();
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                connection.commit();
                 if (resultSet.next()) {
                     id = resultSet.getInt(1);
                 }
+                resultSet.close();
             }
             connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
         }
         return id;
@@ -198,9 +248,10 @@ public class Db {
     public static Mark addMark(int studentId, int groupId, int theme) {
         int id = 0;
         int defaultValue = 0;
+        Connection connection = null;
         try {
-            Class.forName(DRIVER);
-            Connection connection = DriverManager.getConnection(URL, USER, PASS);
+            connection = getConnection();
+            connection.setAutoCommit(false);
             String sql = "insert into \"mark\" (student_id, group_id, theme, value) values (?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setInt(1, studentId);
@@ -208,32 +259,44 @@ public class Db {
                 preparedStatement.setInt(3, theme);
                 preparedStatement.setInt(4, defaultValue);
                 preparedStatement.executeUpdate();
+                connection.commit();
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     id = resultSet.getInt(1);
                 }
+                resultSet.close();
             }
             connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
         }
         return new Mark(id, groupId,studentId, theme, defaultValue);
     }
 
     public static void linkUserGroup(int userId, int groupId) {
+        Connection connection = null;
         try {
-            Class.forName(DRIVER);
-            Connection connection = DriverManager.getConnection(URL, USER, PASS);
+            connection = getConnection();
+            connection.setAutoCommit(false);
             String sql = "insert into user_group (user_id, group_id) values (?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, userId);
                 preparedStatement.setInt(2, groupId);
                 preparedStatement.executeUpdate();
+                connection.commit();
             }
             connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
         }
     }

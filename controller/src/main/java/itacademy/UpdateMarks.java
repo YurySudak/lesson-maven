@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(value = {"/updateMarks"})
+@WebServlet(value = {"/" + ServletPath.UPDATE_MARKS})
 public class UpdateMarks extends HttpServlet {
-    private final static Logger log = LoggerFactory.getLogger(UsersRepository.class);
+    private final static Logger LOG = LoggerFactory.getLogger(UpdateMarks.class);
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        List<Mark> marks = MarksRepository.getMarks();
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        List<Mark> marks = RepositoryService.getMarks();
         for (Mark mark : marks) {
             String rawValue = req.getParameter("mark_id_" + mark.getId());
             if (rawValue != null) {
@@ -25,13 +25,14 @@ public class UpdateMarks extends HttpServlet {
                     value = Integer.parseInt(rawValue);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                    log.debug("Teacher add wrong mark {}", rawValue);
+                    LOG.debug("Teacher add wrong mark {}", rawValue);
                 }
-                MarksRepository.setMark(mark.getId(), value);
+                RepositoryService.setMark(mark.getId(), value);
+
             }
         }
-        int updates = Db.updateMarks();
-        log.info("Teacher edited marks, {} marks updated", updates);
-        resp.sendRedirect("teacher");
+        int updates = RepositoryService.updateMarks();
+        LOG.info("Teacher edited marks, {} marks updated", updates);
+        resp.sendRedirect(ServletPath.TEACHER);
     }
 }

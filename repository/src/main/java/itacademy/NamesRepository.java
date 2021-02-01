@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NamesRepository {
-    private final static Logger LOG = LoggerFactory.getLogger(UsersRepository.class);
-    private static final Map<Integer, String> groupNames = new HashMap<>();
-    private static final Map<String, Integer> groupIds = new HashMap<>();
+    private final static Logger LOG = LoggerFactory.getLogger(NamesRepository.class);
+    private static final Map<Integer, String> groupNames = new ConcurrentHashMap<>();
+    private static final Map<String, Integer> groupIds = new ConcurrentHashMap<>();
 
     public static void init() {
         try {
