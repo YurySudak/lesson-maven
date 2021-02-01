@@ -1,1 +1,0 @@
-<nav align=center><a href="/admin">Средние зарплаты преподавателей</a> | <a href="/admin/formteachers">Ввести новых преподавателей</a> | <a href="/logout">Выйти</a></nav>

@@ -1,32 +1,35 @@
 package itacademy;
 
-import javax.servlet.ServletException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(value = {"/login"})
+@WebServlet(value = {"/" + Const.LOGIN})
 public class Login extends HttpServlet {
+    private final static Logger LOG = LoggerFactory.getLogger(Login.class);
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String user = req.getParameter("user");
-        String pass = req.getParameter("pass");
-        if (user.equals("admin") && pass.equals("admin")) {
-            resp.addCookie(new Cookie("user", user));
-            resp.sendRedirect("/" + user);
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String login = req.getParameter(Const.LOGIN);
+        String pass = req.getParameter(Const.PASS);
+        User user = RepositoryService. getUserByLogin(login);
+        if (pass.equals(user.getPassword())) {
+            String sessionType = "";
+            int type = user.getType();
+            if (type == 1) sessionType = Const.ADMIN;
+            if (type == 2) sessionType = Const.TEACHER;
+            if (type == 3) sessionType = Const.STUDENT;
+            req.getSession().setAttribute(Const.USER, sessionType);
+            req.getSession().setAttribute(Const.LOGIN, login);
+            LOG.info(sessionType +" {} logged in", login);
+            resp.sendRedirect(sessionType);
             return;
         }
-        for (Teacher teacher : TeachersRepository.getTeachers()) {
-            if (user.equals(teacher.getLogin()) && pass.equals(teacher.getPassword())) {
-                resp.addCookie(new Cookie("user", user));
-                resp.sendRedirect("/teacher/" + user);
-                return;
-            }
-        }
-        resp.sendRedirect("/auth");
+        resp.sendRedirect(ServletPath.AUTH);
     }
 }
