@@ -64,25 +64,29 @@ public class UsersRepository {
         }
     }
 
-    public static void addUser(User user) {
-        if (user instanceof Admin) {
-            admins.add((Admin) user);
-            //TODO
-        }
-        if (user instanceof Teacher) {
-            Teacher teacher = (Teacher) user;
-            int id = Db.addUser(teacher);
-            teacher.setId(id);
-            Db.linkUserGroup(teacher.getId(), teacher.getGroupId());
-            Db.setSalary(teacher);
-            teachers.add(teacher);
-            String login = teacher.getLogin();
-            teachersMap.put(login, teacher);
-            usersMap.put(login, teacher);
-        }
-        if (user instanceof Student) {
-            students.add((Student) user);
-            //TODO
+    public static void addUser(User user) throws LoginExistException {
+        if (usersMap.get(user.getLogin()) != null) {
+            throw new LoginExistException("Пользователь с таким логином уже существует");
+        } else {
+            if (user instanceof Admin) {
+                admins.add((Admin) user);
+                //TODO
+            }
+            if (user instanceof Teacher) {
+                Teacher teacher = (Teacher) user;
+                int id = Db.addUser(teacher);
+                teacher.setId(id);
+                Db.linkUserGroup(teacher.getId(), teacher.getGroupId());
+                Db.setSalary(teacher);
+                teachers.add(teacher);
+                String login = teacher.getLogin();
+                teachersMap.put(login, teacher);
+                usersMap.put(login, teacher);
+            }
+            if (user instanceof Student) {
+                students.add((Student) user);
+                //TODO
+            }
         }
     }
 
@@ -120,5 +124,12 @@ public class UsersRepository {
 
     public static List<Student> getStudents() {
         return new ArrayList<>(students);
+    }
+
+    public static void deleteTeacher(String login) {
+        Teacher teacher = getTeacherByLogin(login);
+        teachers.remove(teacher);
+        teachersMap.remove(login);
+        Db.deleteUser(teacher.getId());
     }
 }

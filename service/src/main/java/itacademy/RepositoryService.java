@@ -6,7 +6,7 @@ public class RepositoryService {
 
     public static int amountOfThemes = MarksRepository.amountOfThemes;
 
-    public static void addUser(Teacher teacher) {
+    public static void addUser(Teacher teacher) throws LoginExistException {
         UsersRepository.addUser(teacher);
     }
 
@@ -70,5 +70,9 @@ public class RepositoryService {
 
     public static List<Student> getStudentsByTeacher(Teacher teacher) {
         return UsersRepository.getStudentsByTeacher(teacher);
+    }
+
+    public static void deleteTeacher(String login) {
+        UsersRepository.deleteTeacher(login);
     }
 }

@@ -29,7 +29,7 @@ public class AdminPage extends HttpServlet {
             }
             if (("/" + ServletPath.ADD_TEACHERS).equals(req.getServletPath())) {
                 menu(writer, false);
-                addTeachers(writer);
+                addTeachers(writer, req);
                 teachers(writer);
             }
             writer.write("</div></body>");
@@ -38,7 +38,7 @@ public class AdminPage extends HttpServlet {
         } else resp.sendRedirect(ServletPath.AUTH);
     }
 
-    private void addTeachers(PrintWriter writer) {
+    private void addTeachers(PrintWriter writer, HttpServletRequest req) {
         writer.write("<h2 align=center>" + ENTER_NEW_TEACHERS + "</h2>\n");
         writer.write("<form action=\"" + ServletPath.ADD_TEACHER  + "\" method=\"post\">\n");
         writer.write("<p>Логин <input type=\"text\" name=\"login\" size=\"10\" required value=\"lok\"></p>\n");
@@ -57,11 +57,15 @@ public class AdminPage extends HttpServlet {
         }
         writer.write("</tr></table>");
         writer.write("<p><button type=\"submit\">Ввести</button></p></form>\n");
+        String attr = (String) req.getAttribute("exception");
+        if (attr != null) {
+            writer.write("<p>" + attr + "</p>");
+        }
     }
 
     private void teachers(PrintWriter writer) {
         StringBuilder result = new StringBuilder();
-        result.append("<table border-spacing: 25px 20px; align=center><tr><td><b>Зарплаты</b></td>");
+        result.append("<table><tr><td><b>Зарплаты</b></td>");
         for(int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
             result.append("<td>Месяц: ").append(i).append("</td>");
         }
@@ -74,6 +78,13 @@ public class AdminPage extends HttpServlet {
             for (int i = 1; i <= list.size(); i++) {
                 result.append("<td>").append(list.get(i - 1)).append("</td>");
             }
+            result.append("<td><form action=\"")
+                    .append(ServletPath.DELETE_TEACHER)
+                    .append("\" method=\"post\">")
+                    .append("<button type=\"submit\" name=\"delete\" value=\"")
+                    .append(teacher.getLogin())
+                    .append("\">Удалить преподавателя</button></form>")
+                    .append("</td>");
             result.append("</tr>");
         }
         result.append("</table>");
@@ -93,7 +104,7 @@ public class AdminPage extends HttpServlet {
     private void salaries(PrintWriter writer) {
         writer.write("<h2 align=center>" + AVERAGE_SALARIES + "</h2>");
         StringBuilder result = new StringBuilder();
-        result.append("<table align=center><tr><td><b>ФИО</b></td>");
+        result.append("<table><tr><td><b>ФИО</b></td>");
         for(int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
             String russian = "";
             if (i > 1) russian = "a";

@@ -3,6 +3,7 @@ package itacademy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,16 +18,21 @@ public class AddTeacher extends HttpServlet {
     private static final int AMOUNT_OF_MONTHS = 12;
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Teacher teacher = new Teacher();
         teacher.setLogin(req.getParameter(Const.LOGIN));
         teacher.setPassword(req.getParameter(Const.PASS));
         teacher.setFio(req.getParameter(Const.FIO));
         setAge(req, teacher);
-        setGroupId(req, teacher);
         setSalary(req, teacher);
-        RepositoryService.addUser(teacher);
-        LOG.info("Admin added new teacher = {}", teacher);
+        try {
+            RepositoryService.addUser(teacher);
+            LOG.info("Admin added new teacher = {}", teacher);
+            setGroupId(req, teacher);
+        } catch (LoginExistException e) {
+            req.setAttribute("exception", e);
+            LOG.info("Admin tried to add teacher with existing login = {}", teacher);
+        }
         resp.sendRedirect(ServletPath.ADD_TEACHERS);
     }
 

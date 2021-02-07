@@ -75,11 +75,7 @@ public class Db {
             statement.close();
             connection.close();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOG.error(ex.getMessage());
-            }
+            tryRollback(connection);
             LOG.error(e.getMessage());
         }
         return resultSet;
@@ -113,11 +109,7 @@ public class Db {
             }
             connection.close();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOG.error(ex.getMessage());
-            }
+            tryRollback(connection);
             LOG.error(e.getMessage());
         }
         return id;
@@ -143,11 +135,7 @@ public class Db {
             }
             connection.close();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOG.error(ex.getMessage());
-            }
+            tryRollback(connection);
             LOG.error(e.getMessage());
         }
         return result;
@@ -175,11 +163,7 @@ public class Db {
             }
             connection.close();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOG.error(ex.getMessage());
-            }
+            tryRollback(connection);
             LOG.error(e.getMessage());
         }
         return salary;
@@ -206,11 +190,7 @@ public class Db {
             }
             connection.close();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOG.error(ex.getMessage());
-            }
+            tryRollback(connection);
             LOG.error(e.getMessage());
         }
         return result;
@@ -235,11 +215,7 @@ public class Db {
             }
             connection.close();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOG.error(ex.getMessage());
-            }
+            tryRollback(connection);
             LOG.error(e.getMessage());
         }
         return id;
@@ -268,11 +244,7 @@ public class Db {
             }
             connection.close();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOG.error(ex.getMessage());
-            }
+            tryRollback(connection);
             LOG.error(e.getMessage());
         }
         return new Mark(id, groupId,studentId, theme, defaultValue);
@@ -292,12 +264,68 @@ public class Db {
             }
             connection.close();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOG.error(ex.getMessage());
-            }
+            tryRollback(connection);
             LOG.error(e.getMessage());
+        }
+    }
+
+    public static void deleteUser(int id) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            connection.setAutoCommit(false);
+            String sql = "select * from user_group where user_id = ?";
+            ResultSet resultSet = null;
+            int groupId = 0;
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, id);
+                resultSet = preparedStatement.executeQuery();
+                connection.commit();
+                if (resultSet.next()) {
+                    groupId = resultSet.getInt("group_id");
+                }
+                resultSet.close();
+            }
+
+            sql = "delete from user_group where user_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
+            }
+
+            sql = "delete from salary where teacher_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
+            }
+
+            sql = "delete from \"user\" where id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
+            }
+
+            sql = "delete from \"group\" where id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, groupId);
+                preparedStatement.executeUpdate();
+            }
+
+            connection.commit();
+            connection.close();
+        } catch (SQLException e) {
+            tryRollback(connection);
+            LOG.error(e.getMessage());
+        }
+    }
+
+    private static void tryRollback(Connection connection) {
+        try {
+            if (connection != null) {
+                connection.rollback();
+            }
+        } catch (SQLException ex) {
+            LOG.error(ex.getMessage());
         }
     }
 }

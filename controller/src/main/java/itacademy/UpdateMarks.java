@@ -27,6 +27,14 @@ public class UpdateMarks extends HttpServlet {
                     e.printStackTrace();
                     LOG.debug("Teacher add wrong mark {}", rawValue);
                 }
+                if (value > 100) {
+                    value = 100;
+                    LOG.debug("Teacher add too big mark {}", value);
+                }
+                if (value < 0) {
+                    value = 0;
+                    LOG.debug("Teacher add too little mark {}", value);
+                }
                 RepositoryService.setMark(mark.getId(), value);
 
             }
