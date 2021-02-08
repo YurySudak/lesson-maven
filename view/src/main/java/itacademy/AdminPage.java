@@ -16,8 +16,8 @@ public class AdminPage extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String user = (String) req.getSession().getAttribute(Const.USER);
-        if (Const.ADMIN.equals(user)) {
+        String user = (String) req.getSession().getAttribute(RepoConst.USER);
+        if (RepoConst.ADMIN.equals(user)) {
             PrintWriter writer = resp.getWriter();
             writer.write("<head><title>Страница администратора</title>");
             writer.write(ViewConst.STYLE);
@@ -70,11 +70,11 @@ public class AdminPage extends HttpServlet {
             result.append("<td>Месяц: ").append(i).append("</td>");
         }
         result.append("</tr>");
-        List<Teacher> teachers = RepositoryService.getTeachers();
-        for(Teacher teacher : teachers) {
+        List<User> teachers = RepositoryService.getTeachers();
+        for(User teacher : teachers) {
             result.append("<tr>");
             result.append("<td>").append(teacher.getFio()).append("</td>");
-            List<Double> list = teacher.getSalary();
+            List<Double> list = null;
             for (int i = 1; i <= list.size(); i++) {
                 result.append("<td>").append(list.get(i - 1)).append("</td>");
             }
@@ -112,8 +112,8 @@ public class AdminPage extends HttpServlet {
             result.append("<td>За ").append(i).append(" месяц").append(russian).append("</td>");
         }
         result.append("</tr>");
-        List<Teacher> teachers = RepositoryService.getTeachers();
-        for (Teacher teacher : teachers) {
+        List<User> teachers = RepositoryService.getTeachers();
+        for (User teacher : teachers) {
             result.append("<tr>").append(printSalaries(teacher)).append("</tr>");
         }
         result.append("</table>");
@@ -121,7 +121,7 @@ public class AdminPage extends HttpServlet {
 
     }
 
-    private static StringBuilder printSalaries(Teacher teacher) {
+    private static StringBuilder printSalaries(User teacher) {
         StringBuilder result = new StringBuilder();
         result.append("<td>").append(teacher.getFio()).append("</td>");
         for(int i = 1; i <= AMOUNT_OF_MONTHS; i++) {

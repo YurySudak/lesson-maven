@@ -4,75 +4,73 @@ import java.util.List;
 
 public class RepositoryService {
 
-    public static int amountOfThemes = MarksRepository.amountOfThemes;
+    public static final int AMOUNT_OF_THEMES = HibernateRepository.getAmountOfThemes();
 
-    public static void addUser(Teacher teacher) throws LoginExistException {
-        UsersRepository.addUser(teacher);
+    public static void addUser(User user) throws ExistException {
+        HibernateRepository.addUser(user);
     }
 
-    public static int addGroup(String groupName) {
-        return Db.addGroup(groupName);
-    }
-
-    public static void setGroup(int groupId, String groupName) {
-        NamesRepository.setGroup(groupId, groupName);
+    public static void addGroup(String groupName) throws ExistException {
+        HibernateRepository.addGroup(groupName);
     }
 
     public static User getUserByLogin(String login) {
-        return UsersRepository.getUserByLogin(login);
+        return HibernateRepository.getUserByLogin(login);
     }
 
     public static List<Mark> getMarks() {
-        return MarksRepository.getMarks();
+        return HibernateRepository.getMarks();
     }
 
     public static void setMark(int id, int value) {
-        MarksRepository.setMark(id, value);
+        HibernateRepository.setMark(id, value);
     }
 
     public static int updateMarks() {
-        return Db.updateMarks();
+        return 0;
     }
 
-    public static List<Teacher> getTeachers() {
-        return UsersRepository.getTeachers();
+    public static List<User> getTeachers() {
+        return null;
     }
 
     public static void init() {
-        UsersRepository.init();
-        MarksRepository.init();
-        NamesRepository.init();
+
     }
 
-    public static List<Admin> getAdmins() {
-        return UsersRepository.getAdmins();
+    public static List<User> getAdmins() {
+        return null;
     }
 
-    public static List<Student> getStudents() {
-        return UsersRepository.getStudents();
+    public static List<User> getStudents() {
+        return null;
     }
 
-    public static Student getStudentByLogin(String login) {
-        return UsersRepository.getStudentByLogin(login);
+    public static User getStudentByLogin(String login) {
+        return null;
     }
 
     public static String getGroupNameById(Integer groupId) {
-        return NamesRepository.getGroupNameById(groupId);
+        return null;
     }
 
     public static Mark getMark(int id, int groupId, int theme) {
-        return MarksRepository.getMark(id, groupId, theme);
+        return null;
     }
 
-    public static Teacher getTeacherByLogin(String login) {
-        return UsersRepository.getTeacherByLogin(login);
+    public static User getTeacherByLogin(String login) {
+        return null;
     }
 
-    public static List<Student> getStudentsByTeacher(Teacher teacher) {
-        return UsersRepository.getStudentsByTeacher(teacher);
+    public static List<User> getStudentsByTeacher(User teacher) {
+        return null;
     }
 
     public static void deleteTeacher(String login) {
-        UsersRepository.deleteTeacher(login);
+
+    }
+
+    public static void setSalary(User teacher, List<Double> list) {
+
     }
 }

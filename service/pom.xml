@@ -7,7 +7,7 @@
     <artifactId>service</artifactId>
 
     <parent>
-        <artifactId>lesson-maven</artifactId>
+        <artifactId>it-academy-site</artifactId>
         <groupId>itacademy</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>

@@ -1,6 +1,6 @@
 package itacademy;
 
-public class Const {
+public class RepoConst {
     public static final String LOGIN = "login";
     public static final String PASS = "pass";
     public static final String ADMIN = "admin";

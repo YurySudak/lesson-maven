@@ -36,7 +36,6 @@ public class UpdateMarks extends HttpServlet {
                     LOG.debug("Teacher add too little mark {}", value);
                 }
                 RepositoryService.setMark(mark.getId(), value);
-
             }
         }
         int updates = RepositoryService.updateMarks();

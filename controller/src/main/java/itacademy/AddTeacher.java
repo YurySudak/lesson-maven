@@ -15,28 +15,28 @@ import java.util.List;
 @WebServlet(value = {"/" + ServletPath.ADD_TEACHER})
 public class AddTeacher extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(AddTeacher.class);
-    private static final int AMOUNT_OF_MONTHS = 12;
+    private static final int AMOUNT_OF_MONTHS = RepositoryService.AMOUNT_OF_THEMES;
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Teacher teacher = new Teacher();
-        teacher.setLogin(req.getParameter(Const.LOGIN));
-        teacher.setPassword(req.getParameter(Const.PASS));
-        teacher.setFio(req.getParameter(Const.FIO));
+        User teacher = new User();
+        teacher.setLogin(req.getParameter(RepoConst.LOGIN));
+        teacher.setPassword(req.getParameter(RepoConst.PASS));
+        teacher.setFio(req.getParameter(RepoConst.FIO));
         setAge(req, teacher);
         setSalary(req, teacher);
         try {
             RepositoryService.addUser(teacher);
             LOG.info("Admin added new teacher = {}", teacher);
-            setGroupId(req, teacher);
-        } catch (LoginExistException e) {
+            setGroupId(req);
+        } catch (ExistException e) {
             req.setAttribute("exception", e);
             LOG.info("Admin tried to add teacher with existing login = {}", teacher);
         }
         resp.sendRedirect(ServletPath.ADD_TEACHERS);
     }
 
-    private void setSalary(HttpServletRequest req, Teacher teacher) {
+    private void setSalary(HttpServletRequest req, User teacher) {
         List<Double> list = new ArrayList<>();
         for (int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
             double salary = 0;
@@ -48,18 +48,21 @@ public class AddTeacher extends HttpServlet {
             }
             list.add(salary);
         }
-        teacher.setSalary(list);
+        RepositoryService.setSalary(teacher, list);
     }
 
-    private void setGroupId(HttpServletRequest req, Teacher teacher) {
+    private void setGroupId(HttpServletRequest req) {
         String groupName = req.getParameter("group_name");
-        int groupId =  RepositoryService.addGroup(groupName);
-        teacher.setGroupId(groupId);
-        RepositoryService.setGroup(groupId, groupName);
+        try {
+            RepositoryService.addGroup(groupName);
+        } catch (ExistException e) {
+            req.setAttribute("exception", e);
+            LOG.info("Admin tried to add teacher with existing group = {}", groupName);
+        }
     }
 
-    private void setAge(HttpServletRequest req, Teacher teacher) {
-        String inputAge = req.getParameter(Const.AGE);
+    private void setAge(HttpServletRequest req, User teacher) {
+        String inputAge = req.getParameter(RepoConst.AGE);
         int age = 0;
         try {
             age = Integer.parseInt(inputAge);

@@ -15,8 +15,8 @@ public class Logout extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String user = (String) req.getSession().getAttribute(Const.USER);
-        String login = (String) req.getSession().getAttribute(Const.LOGIN);
+        String user = (String) req.getSession().getAttribute(RepoConst.USER);
+        String login = (String) req.getSession().getAttribute(RepoConst.LOGIN);
         LOG.info("{} {} logged out", user, login);
         req.getSession().invalidate();
         resp.sendRedirect(ServletPath.AUTH);
