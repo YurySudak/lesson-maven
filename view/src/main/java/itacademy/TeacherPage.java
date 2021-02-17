@@ -16,14 +16,14 @@ public class TeacherPage extends HttpServlet {
         String user = (String) req.getSession().getAttribute(RepoConst.USER);
         if (RepoConst.TEACHER.equals(user)) {
             String login = (String) req.getSession().getAttribute(RepoConst.LOGIN);
-            User teacher = RepositoryService.getTeacherByLogin(login);
+            User teacher = RepositoryService.getUserByLogin(login);
             PrintWriter writer = resp.getWriter();
             String pageName = "Страница преподавателя";
             writer.write("<head><title>" + pageName + "</title>");
             writer.write(ViewConst.STYLE);
             writer.write("</head><body><div><h2>" + pageName + "</h2>");
             writer.write("<p>ФИО: " + teacher.getFio()+ "</p>");
-            writer.write("<p>Группа: " + RepositoryService.getGroupNameById(teacher.getGroups().iterator().next().getId()) + "</p>");
+            writer.write("<p>Группа: " + RepositoryService.getGroupNameByTeacher(teacher) + "</p>");
             List<User> students = RepositoryService.getStudentsByTeacher(teacher);
             writer.write("<table><tr><td><b>Оценки</b></td>");
             for (int i = 1; i <= 12; i++) {

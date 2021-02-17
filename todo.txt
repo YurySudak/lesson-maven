@@ -1,2 +1,0 @@
-batch insert
-вынос в отдельный метод prepare statement, rollback

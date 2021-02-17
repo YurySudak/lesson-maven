@@ -1,6 +1,5 @@
 package itacademy;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,12 +10,6 @@ import java.util.List;
 
 @WebServlet(value = {"/" + ServletPath.AUTH, "/"})
 public class Auth  extends HttpServlet {
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        RepositoryService.init();
-    }
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

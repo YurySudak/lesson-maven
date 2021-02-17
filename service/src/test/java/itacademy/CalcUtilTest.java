@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CalcUtilTest {
 
-    public static Teacher teacher1 = new Teacher();
+/*    public static Teacher teacher1 = new Teacher();
     public static Teacher teacher2 = new Teacher();
     public static Teacher teacher3 = new Teacher();
     public static Teacher teacher4 = new Teacher();
@@ -24,5 +24,5 @@ public class CalcUtilTest {
         assertEquals("0.00", CalcUtil.calcSalary(teacher3, 1).toString());
         assertEquals("500.00", CalcUtil.calcSalary(teacher4, 4).toString());
         assertEquals("400.00", CalcUtil.calcSalary(teacher4, 2).toString());
-    }
+    }*/
 }

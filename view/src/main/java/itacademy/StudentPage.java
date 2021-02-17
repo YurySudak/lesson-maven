@@ -29,7 +29,7 @@ public class StudentPage extends HttpServlet {
             }
             writer.write("</tr>");
             for (Group group : student.getGroups()) {
-                writer.write("<tr><td>Группа: " + RepositoryService.getGroupNameById(group.getId()) + "</td>");
+                writer.write("<tr><td>Группа: " + group.getGroupName() + "</td>");
                 for (int theme = 1; theme <= RepositoryService.AMOUNT_OF_THEMES; theme++) {
                     Mark mark = RepositoryService.getMark(student.getId(), group.getId(), theme);
                     writer.write("<td>" + mark.getValue() + "</td>");
