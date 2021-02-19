@@ -8,52 +8,54 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet(value = {"/" + ServletPath.ADD_TEACHER})
 public class AddTeacher extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(AddTeacher.class);
-    private static final int AMOUNT_OF_MONTHS = 12;
+    private static final int AMOUNT_OF_MONTHS = RepositoryService.AMOUNT_OF_MONTHS;
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Teacher teacher = new Teacher();
-        teacher.setLogin(req.getParameter(Const.LOGIN));
-        teacher.setPassword(req.getParameter(Const.PASS));
-        teacher.setFio(req.getParameter(Const.FIO));
-        setAge(req, teacher);
-        setGroupId(req, teacher);
-        setSalary(req, teacher);
-        RepositoryService.addUser(teacher);
-        LOG.info("Admin added new teacher = {}", teacher);
-        resp.sendRedirect(ServletPath.ADD_TEACHERS);
+        String login = req.getParameter(RepoConst.LOGIN);
+        if (!RepositoryService.checkLogin(login)) {
+            User teacher = new User();
+            teacher.setLogin(login);
+            teacher.setPassword(req.getParameter(RepoConst.PASS));
+            teacher.setFio(req.getParameter(RepoConst.FIO));
+            setAge(req, teacher);
+            teacher.setType(2);
+            Group group = setGroup(req);
+            teacher.addGroup(group);
+            RepositoryService.addUser(teacher);
+            LOG.info("Admin added new teacher = {}", teacher);
+            setSalary(req, teacher);
+        } else {
+            req.getSession().setAttribute("exception", "Такой логин уже существует: " + login);
+            LOG.error("Admin tried to add teacher with existing login = {}", login);
+        }
+        resp.sendRedirect(ServletPath.EDIT_TEACHERS);
     }
 
-    private void setSalary(HttpServletRequest req, Teacher teacher) {
-        List<Double> list = new ArrayList<>();
-        for (int i = 1; i <= AMOUNT_OF_MONTHS; i++) {
+    private void setSalary(HttpServletRequest req, User teacher) {
+        for (int month = 1; month <= AMOUNT_OF_MONTHS; month++) {
             double salary = 0;
-            String parameter = req.getParameter("z" + i);
+            String parameter = req.getParameter("z" + month);
             try {
                 salary = Double.parseDouble(parameter);
             } catch (NumberFormatException numberFormatException) {
                 LOG.debug("Admin added wrong salary: {}", parameter);
             }
-            list.add(salary);
+            RepositoryService.setSalary(teacher, month, salary);
         }
-        teacher.setSalary(list);
     }
 
-    private void setGroupId(HttpServletRequest req, Teacher teacher) {
+    private Group setGroup(HttpServletRequest req) {
         String groupName = req.getParameter("group_name");
-        int groupId =  RepositoryService.addGroup(groupName);
-        teacher.setGroupId(groupId);
-        RepositoryService.setGroup(groupId, groupName);
+        return RepositoryService.addGroup(groupName);
     }
 
-    private void setAge(HttpServletRequest req, Teacher teacher) {
-        String inputAge = req.getParameter(Const.AGE);
+    private void setAge(HttpServletRequest req, User teacher) {
+        String inputAge = req.getParameter(RepoConst.AGE);
         int age = 0;
         try {
             age = Integer.parseInt(inputAge);

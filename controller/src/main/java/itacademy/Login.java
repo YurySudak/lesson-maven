@@ -9,23 +9,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(value = {"/" + Const.LOGIN})
+@WebServlet(value = {"/" + RepoConst.LOGIN})
 public class Login extends HttpServlet {
     private final static Logger LOG = LoggerFactory.getLogger(Login.class);
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String login = req.getParameter(Const.LOGIN);
-        String pass = req.getParameter(Const.PASS);
-        User user = RepositoryService. getUserByLogin(login);
+        String login = req.getParameter(RepoConst.LOGIN);
+        String pass = req.getParameter(RepoConst.PASS);
+        User user = RepositoryService.getUserByLogin(login);
         if (pass.equals(user.getPassword())) {
             String sessionType = "";
             int type = user.getType();
-            if (type == 1) sessionType = Const.ADMIN;
-            if (type == 2) sessionType = Const.TEACHER;
-            if (type == 3) sessionType = Const.STUDENT;
-            req.getSession().setAttribute(Const.USER, sessionType);
-            req.getSession().setAttribute(Const.LOGIN, login);
+            if (type == 1) sessionType = RepoConst.ADMIN;
+            if (type == 2) sessionType = RepoConst.TEACHER;
+            if (type == 3) sessionType = RepoConst.STUDENT;
+            req.getSession().setAttribute(RepoConst.USER, sessionType);
+            req.getSession().setAttribute(RepoConst.LOGIN, login);
             LOG.info(sessionType +" {} logged in", login);
             resp.sendRedirect(sessionType);
             return;

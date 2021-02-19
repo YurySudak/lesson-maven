@@ -1,6 +1,5 @@
 package itacademy;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,16 +12,19 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity(name = "mark")
-public class Mark implements Serializable {
+@Entity(name = "salary")
+public class Salary implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "group_id")
-    private int groupId;
-    @Column(name = "student_id")
-    private int studentId;
-    private int theme;
-    private int value;
+    @Column(name = "teacher_id")
+    private int teacherId;
+    private double value;
+    private int month;
+
+    public Salary(int teacherId, int month, double value) {
+        this.teacherId = teacherId;
+        this.value = value;
+        this.month = month;
+    }
 }

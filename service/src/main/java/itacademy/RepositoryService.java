@@ -1,74 +1,78 @@
 package itacademy;
 
 import java.util.List;
+import java.util.Set;
 
 public class RepositoryService {
 
-    public static int amountOfThemes = MarksRepository.amountOfThemes;
+    public static final int AMOUNT_OF_THEMES = HibernateRepository.getAmountOfThemes();
+    public static final int AMOUNT_OF_MONTHS = HibernateRepository.getAmountOfMonths();
 
-    public static void addUser(Teacher teacher) {
-        UsersRepository.addUser(teacher);
+    public static void addUser(User user) {
+        HibernateRepository.addUser(user);
     }
 
-    public static int addGroup(String groupName) {
-        return Db.addGroup(groupName);
-    }
-
-    public static void setGroup(int groupId, String groupName) {
-        NamesRepository.setGroup(groupId, groupName);
+    public static Group addGroup(String groupName) {
+        return HibernateRepository.addGroup(groupName);
     }
 
     public static User getUserByLogin(String login) {
-        return UsersRepository.getUserByLogin(login);
+        return HibernateRepository.getUserByLogin(login);
     }
 
-    public static List<Mark> getMarks() {
-        return MarksRepository.getMarks();
+    public static Set<Mark> getMarks() {
+        return HibernateRepository.getMarks();
     }
 
     public static void setMark(int id, int value) {
-        MarksRepository.setMark(id, value);
+        HibernateRepository.setMark(id, value);
     }
 
-    public static int updateMarks() {
-        return Db.updateMarks();
+    public static void updateMarks() {
+        HibernateRepository.updateMarks();
     }
 
-    public static List<Teacher> getTeachers() {
-        return UsersRepository.getTeachers();
+    public static List<User> getTeachers() {
+        return HibernateRepository.getUsers(RepoConst.TEACHER);
     }
 
-    public static void init() {
-        UsersRepository.init();
-        MarksRepository.init();
-        NamesRepository.init();
+    public static List<User> getAdmins() {
+        return HibernateRepository.getUsers(RepoConst.ADMIN);
     }
 
-    public static List<Admin> getAdmins() {
-        return UsersRepository.getAdmins();
+    public static List<User> getStudents() {
+        return HibernateRepository.getUsers(RepoConst.STUDENT);
     }
 
-    public static List<Student> getStudents() {
-        return UsersRepository.getStudents();
+    public static User getStudentByLogin(String login) {
+        return HibernateRepository.getUserByLogin(login);
     }
 
-    public static Student getStudentByLogin(String login) {
-        return UsersRepository.getStudentByLogin(login);
+    public static Mark getMark(int studentId, int groupId, int theme) {
+        return HibernateRepository.getMark(studentId, groupId, theme);
     }
 
-    public static String getGroupNameById(Integer groupId) {
-        return NamesRepository.getGroupNameById(groupId);
+    public static List<User> getStudentsByTeacher(User teacher) {
+        return HibernateRepository.getStudentsByTeacher(teacher, RepoConst.STUDENT);
     }
 
-    public static Mark getMark(int id, int groupId, int theme) {
-        return MarksRepository.getMark(id, groupId, theme);
+    public static void deleteUser(String login) {
+        HibernateRepository.deleteUser(login);
     }
 
-    public static Teacher getTeacherByLogin(String login) {
-        return UsersRepository.getTeacherByLogin(login);
+    public static void setSalary(User teacher, int month, double value) {
+        HibernateRepository.setSalary(teacher, month, value);
     }
 
-    public static List<Student> getStudentsByTeacher(Teacher teacher) {
-        return UsersRepository.getStudentsByTeacher(teacher);
+    public static String getGroupNameByTeacher(User teacher) {
+        return HibernateRepository.getGroupNameByTeacher(teacher);
+    }
+
+    public static Salary getSalary(User teacher, int month) {
+        return HibernateRepository.getSalary(teacher, month);
+    }
+
+    public static boolean checkLogin(String login) {
+        return HibernateRepository.checkLogin(login);
     }
 }

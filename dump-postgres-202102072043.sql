@@ -5,7 +5,7 @@
 -- Dumped from database version 13.1
 -- Dumped by pg_dump version 13.1
 
--- Started on 2021-01-24 19:38:31
+-- Started on 2021-02-07 20:43:37
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -303,6 +303,7 @@ COPY public."group" (id, group_name) FROM stdin;
 1	Java Core
 2	Java Enterprise
 3	Android
+34	React and Angular
 \.
 
 
@@ -313,79 +314,68 @@ COPY public."group" (id, group_name) FROM stdin;
 --
 
 COPY public.mark (id, group_id, student_id, theme, value) FROM stdin;
-83	2	2	3	7
-84	2	2	4	6
-30	1	3	5	6
-31	1	3	6	0
-32	1	3	7	8
-33	1	3	8	0
-92	2	6	1	5
-34	1	3	9	0
-35	1	3	10	0
-36	1	3	11	0
-38	1	4	2	7
-39	1	4	3	9
+39	1	4	3	80
 40	1	4	4	0
 41	1	4	5	0
-42	1	4	6	6
-43	1	4	7	8
+42	1	4	6	0
+43	1	4	7	0
 44	1	4	8	0
-93	2	6	2	6
+93	2	6	2	78
 45	1	4	9	0
 46	1	4	10	0
 47	1	4	11	0
-49	1	5	2	7
-50	1	5	3	9
-94	2	6	3	8
-95	2	6	4	6
+49	1	5	2	70
+50	1	5	3	0
+94	2	6	3	0
+95	2	6	4	0
 96	2	6	5	0
-97	2	6	6	7
-114	2	3	1	5
-115	2	3	2	6
-116	2	3	3	8
-117	2	3	4	6
+97	2	6	6	0
+114	2	3	1	80
+115	2	3	2	87
+116	2	3	3	0
+117	2	3	4	0
 118	2	3	5	0
 119	2	3	6	0
 120	2	3	7	0
 121	2	3	8	0
-26	1	3	1	5
-27	1	3	2	7
-28	1	3	3	9
+26	1	3	1	75
+27	1	3	2	80
+28	1	3	3	80
 29	1	3	4	0
-37	1	4	1	5
+37	1	4	1	85
 19	1	2	5	0
-20	1	2	6	6
-21	1	2	7	8
+20	1	2	6	0
+21	1	2	7	0
 22	1	2	8	0
 23	1	2	9	0
 24	1	2	10	0
 25	1	2	11	0
-51	1	5	4	8
-52	1	5	5	6
+51	1	5	4	0
+52	1	5	5	0
 53	1	5	6	0
-54	1	5	7	7
+54	1	5	7	0
 55	1	5	8	0
 56	1	5	9	0
 57	1	5	10	0
 58	1	5	11	0
-59	1	6	1	5
-60	1	6	2	7
-61	1	6	3	9
+59	1	6	1	65
+60	1	6	2	70
+61	1	6	3	0
 62	1	6	4	0
-63	1	6	5	9
-64	1	6	6	6
-65	1	6	7	7
+63	1	6	5	0
+64	1	6	6	0
+65	1	6	7	0
 66	1	6	8	0
 67	1	6	9	0
 68	1	6	10	0
 69	1	6	11	0
-70	1	7	1	5
-71	1	7	2	7
-72	1	7	3	9
+70	1	7	1	75
+71	1	7	2	70
+72	1	7	3	0
 73	1	7	4	0
-74	1	7	5	6
+74	1	7	5	0
 75	1	7	6	0
-76	1	7	7	7
+76	1	7	7	0
 77	1	7	8	0
 78	1	7	9	0
 79	1	7	10	0
@@ -395,15 +385,15 @@ COPY public.mark (id, group_id, student_id, theme, value) FROM stdin;
 13	3	8	12	9
 3	1	3	12	0
 124	2	3	11	0
-125	2	4	1	5
-126	2	4	2	6
-127	2	4	3	8
-128	2	4	4	6
+125	2	4	1	90
+126	2	4	2	69
+127	2	4	3	0
+128	2	4	4	0
 9	2	4	12	0
-129	2	4	5	7
+129	2	4	5	0
 130	2	4	6	0
 131	2	4	7	0
-105	3	6	3	7
+105	3	6	3	0
 106	3	6	4	0
 107	3	6	5	0
 108	3	6	6	0
@@ -412,14 +402,14 @@ COPY public.mark (id, group_id, student_id, theme, value) FROM stdin;
 111	3	6	9	0
 112	3	6	10	0
 113	3	6	11	0
-15	1	2	1	5
-16	1	2	2	7
-17	1	2	3	9
+15	1	2	1	80
+16	1	2	2	80
+17	1	2	3	80
 18	1	2	4	0
 6	1	4	12	0
 2	3	6	12	0
 8	1	5	12	0
-82	2	2	2	6
+82	2	2	2	95
 10	1	6	12	0
 11	1	7	12	0
 4	2	2	12	0
@@ -438,16 +428,16 @@ COPY public.mark (id, group_id, student_id, theme, value) FROM stdin;
 133	2	4	9	0
 134	2	4	10	0
 135	2	4	11	0
-48	1	5	1	5
+48	1	5	1	60
 98	2	6	7	0
 99	2	6	8	0
 100	2	6	9	0
 101	2	6	10	0
 102	2	6	11	0
-103	3	6	1	7
-104	3	6	2	9
-136	3	7	1	8
-137	3	7	2	9
+103	3	6	1	70
+104	3	6	2	90
+136	3	7	1	80
+137	3	7	2	90
 138	3	7	3	0
 139	3	7	4	0
 140	3	7	5	0
@@ -456,11 +446,22 @@ COPY public.mark (id, group_id, student_id, theme, value) FROM stdin;
 143	3	7	8	0
 144	3	7	9	0
 145	3	7	10	0
-81	2	2	1	5
+81	2	2	1	99
+84	2	2	4	0
+83	2	2	3	0
+32	1	3	7	0
+30	1	3	5	0
+31	1	3	6	0
+33	1	3	8	0
+92	2	6	1	85
+34	1	3	9	0
+38	1	4	2	80
+35	1	3	10	0
+36	1	3	11	0
 12	2	6	12	0
 146	3	7	11	0
-147	3	8	1	8
-148	3	8	2	9
+147	3	8	1	80
+148	3	8	2	90
 149	3	8	3	0
 150	3	8	4	0
 151	3	8	5	0
@@ -488,7 +489,6 @@ COPY public.salary (teacher_id, value, month, id) FROM stdin;
 11	1800.11	6	22
 11	1800.11	7	23
 11	1800.11	8	24
-11	1800.11	9	26
 11	1800.11	10	27
 11	1800.11	11	28
 11	1800.11	12	29
@@ -516,6 +516,7 @@ COPY public.salary (teacher_id, value, month, id) FROM stdin;
 10	1600.5	6	6
 10	1600.5	7	7
 10	1600.5	8	8
+11	1800.11	9	26
 \.
 
 
@@ -585,7 +586,7 @@ COPY public.user_group (user_id, group_id) FROM stdin;
 -- Name: group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.group_id_seq', 17, true);
+SELECT pg_catalog.setval('public.group_id_seq', 34, true);
 
 
 --
@@ -603,7 +604,7 @@ SELECT pg_catalog.setval('public.marks_id_seq', 157, true);
 -- Name: salary_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.salary_id_seq', 72, true);
+SELECT pg_catalog.setval('public.salary_id_seq', 180, true);
 
 
 --
@@ -621,7 +622,7 @@ SELECT pg_catalog.setval('public.type_id_seq', 3, true);
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_id_seq', 25, true);
+SELECT pg_catalog.setval('public.user_id_seq', 34, true);
 
 
 --
@@ -723,7 +724,7 @@ ALTER TABLE ONLY public.user_group
     ADD CONSTRAINT user_fk FOREIGN KEY (user_id) REFERENCES public."user"(id);
 
 
--- Completed on 2021-01-24 19:38:31
+-- Completed on 2021-02-07 20:43:38
 
 --
 -- PostgreSQL database dump complete
